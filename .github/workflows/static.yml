@@ -170,8 +170,26 @@
         }
         .step-info { color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
 
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .video-container div#player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        /* 🎯 修正：強制影片與容器 100% 填滿置中 */
+        .video-container { 
+            position: relative; 
+            width: 100%; 
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            height: 0; 
+            overflow: hidden; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            background-color: #000;
+        }
+        .video-container #player,
+        .video-container iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100% !important; 
+            height: 100% !important; 
+            border: 0;
+        }
 
         .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .form-container iframe { width: 100%; height: 100%; border: none; }
@@ -326,13 +344,11 @@
     function onPlayerStateChange(event) {
         if (isUnlocked) return;
 
-        // 當影片處於「播放中 (PLAYING: 1)」狀態時，啟動真實時間累計
         if (event.data === YT.PlayerState.PLAYING) {
             if (!checkInterval) {
                 checkInterval = setInterval(trackRealPlayTime, 1000);
             }
         } else {
-            // 當暫停、緩衝或停止時，暫停計時
             if (checkInterval) {
                 clearInterval(checkInterval);
                 checkInterval = null;
@@ -355,7 +371,6 @@
 
         updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${Math.max(0, remaining)}</span> 秒後自動解鎖測驗`);
 
-        // 當累計播放達到指定的 15 秒
         if (watchedSeconds >= targetWatchSeconds) {
             isUnlocked = true;
             if (checkInterval) clearInterval(checkInterval);
