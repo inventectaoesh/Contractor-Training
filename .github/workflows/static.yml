@@ -117,14 +117,16 @@
         .login-icon { font-size: 48px; filter: drop-shadow(0 4px 10px rgba(200, 35, 43, 0.25)); animation: pulse-ehs 3s infinite ease-in-out; display: inline-block; }
         @keyframes pulse-ehs { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
+        /* 📝 雙輸入框群組 */
         .password-group { 
             display: flex; 
+            flex-direction: column;
             justify-content: center; 
             align-items: center; 
             width: 100%; 
-            max-width: 420px; 
+            max-width: 380px; 
             margin: 20px auto 0 auto; 
-            gap: 10px; 
+            gap: 12px; 
         }
 
         input[type="text"] {
@@ -154,10 +156,11 @@
             cursor: pointer; 
             transition: var(--transition); 
             white-space: nowrap;
+            margin-top: 4px;
         }
         .login-btn:hover { background-color: #a61c22; }
 
-        .error-msg { color: #d32f2f; margin-top: 15px; font-weight: bold; background-color: #ffebee; padding: 10px 15px; border-radius: 8px; font-size: 13px; width: 100%; max-width: 420px; }
+        .error-msg { color: #d32f2f; margin-top: 15px; font-weight: bold; background-color: #ffebee; padding: 10px 15px; border-radius: 8px; font-size: 13px; width: 100%; max-width: 380px; }
 
         /* 影片與測驗區塊樣式 */
         .step-header { display: flex; align-items: center; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid #ecdcd0; }
@@ -165,7 +168,7 @@
             background-color: var(--inventec-red); color: white; font-weight: bold; font-size: 18px;
             width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;
         }
-        .step-info { color: var(--text-light); font-size: 14px; margin-bottom: 20px; }
+        .step-info { color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
@@ -194,24 +197,12 @@
             .login-bottom-half { padding: 20px 15px; }
             .login-bottom-half p { font-size: 13px !important; }
 
-            /* 關鍵：手機上輸入框與按鈕改為垂直堆疊，避免切字 */
-            .password-group { 
-                flex-direction: column; 
-                gap: 10px; 
-            }
-            input[type="text"], .login-btn { 
-                width: 100%; 
-            }
-
             .osh-card { padding: 20px !important; }
             .form-container { height: 800px; }
         }
 
-        /* 💻 平板及電腦寬螢幕調整 */
         @media (min-width: 601px) {
             .osh-card-inner { padding: 35px; }
-            .password-group input[type="text"] { flex-grow: 1; width: auto; }
-            .password-group .login-btn { width: auto; }
         }
     </style>
 </head>
@@ -241,13 +232,16 @@
             <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
             <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.5;">
                 本平台僅開放供本公司審查合格之承攬商人員進修使用。<br>
-                請輸入由<strong>英業達廠區安全衛生部</strong>發放之<strong>授權驗證碼</strong>。
+                請輸入您的<strong>中文姓名</strong>與由<strong>廠區安衛部發放之授權碼</strong>。
             </p>
+            
             <div class="password-group">
-                <input type="text" id="password-input" placeholder="請輸入驗證碼" autocomplete="off">
+                <input type="text" id="name-input" placeholder="請輸入中文姓名" autocomplete="off">
+                <input type="text" id="password-input" placeholder="請輸入授權驗證碼" autocomplete="off">
                 <button id="verify-btn" onclick="checkPassword()" class="login-btn">認證登入</button>
             </div>
-            <div id="error-message" class="error-msg hidden">驗證碼錯誤或已失效，請重新輸入或洽詢廠區安全衛生部。</div>
+
+            <div id="error-message" class="error-msg hidden">姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。</div>
         </div>
     </div>
 
@@ -260,7 +254,10 @@
                 <div class="step-number">01</div>
                 <h2>環安衛數位教材觀看</h2>
             </div>
-            <p class="step-info">請認真觀看下方安全衛生教材影片，測驗題目皆出自影片內容。請勿快轉，確保了解英業達股份有限公司桃科廠(TAO)廠區作業規範及緊急通報流程。</p>
+            <p class="step-info">
+                請認真觀看下方安全衛生教材影片，測驗題目皆出自影片內容。<br>
+                請勿快轉，確保了解英業達股份有限公司桃科廠(TAO)廠區作業規範及緊急通報流程。
+            </p>
             
             <div class="video-container">
                 <iframe src="https://www.youtube.com/embed/ndPOGrauZj4?rel=0&modestbranding=1" allowfullscreen></iframe>
@@ -291,7 +288,7 @@
     </div>
 
     <div class="osh-footer">
-        © Inventec Corporation, Global Environmental Health and Safety Department.<br>
+        © Inventec Corporation, Environmental Health and Safety Department.<br>
         本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進場前教育訓練使用。
     </div>
 </div>
@@ -302,12 +299,13 @@
     let videoDuration = 180; 
 
     async function checkPassword() {
-        const input = document.getElementById('password-input').value.trim().toUpperCase();
+        const inputName = document.getElementById('name-input').value.trim();
+        const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
         const errorMsg = document.getElementById('error-message');
         const btn = document.getElementById('verify-btn');
 
-        if (!input) {
-            errorMsg.innerText = "請輸入驗證碼！";
+        if (!inputName || !inputCode) {
+            errorMsg.innerText = "請完整輸入中文姓名與授權驗證碼！";
             errorMsg.classList.remove('hidden');
             return;
         }
@@ -319,18 +317,32 @@
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
             const csvText = await response.text();
             
-            const allValidCodes = csvText.split('\n').flatMap(row => {
-                return row.split(',').map(cell => cell.trim().replace(/^"|"$/g, '').toUpperCase());
-            });
+            // 將 CSV 按列切分，逐列比對姓名與驗證碼
+            const rows = csvText.split('\n');
+            let isValid = false;
 
-            if (allValidCodes.includes(input)) {
+            for (let row of rows) {
+                const cells = row.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
+                if (cells.length >= 2) {
+                    const sheetName = cells[0].trim();
+                    const sheetCode = cells[1].trim().toUpperCase();
+
+                    // 當姓名與驗證碼同在一列且匹配成功時
+                    if (sheetName === inputName && sheetCode === inputCode) {
+                        isValid = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isValid) {
                 document.getElementById('login-gate').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
                 window.scrollTo(0, 0);
 
                 startVideoTimer();
             } else {
-                errorMsg.innerText = "驗證碼錯誤或已失效，請重新輸入或洽詢廠區安全衛生部。";
+                errorMsg.innerText = "姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。";
                 errorMsg.classList.remove('hidden');
             }
         } catch (error) {
@@ -364,10 +376,12 @@
         }, 1000);
     }
 
+    // 按 Enter 鍵自動觸發驗證
     document.getElementById('password-input').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            checkPassword();
-        }
+        if (e.key === 'Enter') checkPassword();
+    });
+    document.getElementById('name-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkPassword();
     });
 </script>
 
