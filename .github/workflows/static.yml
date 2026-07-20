@@ -170,7 +170,7 @@
         }
         .step-info { color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
 
-        /* 🎯 修正：強制影片與容器 100% 填滿置中 */
+        /* 🎬 強制影片 100% 填滿並置中 */
         .video-container { 
             position: relative; 
             width: 100%; 
@@ -191,6 +191,7 @@
             border: 0;
         }
 
+        /* 📝 表單容器 */
         .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .form-container iframe { width: 100%; height: 100%; border: none; }
 
@@ -295,11 +296,18 @@
             </div>
             <p class="step-info">已完成影片觀看，請在下方視窗直接完成測驗。及格分數為 <strong>80 分</strong>，未及格者請重新測驗。完成後系統將自動記錄，不需列印紙本。</p>
             
+            <!-- 📋 已更新為您最新的 Forms 內嵌語法 -->
             <div class="form-container">
                 <iframe 
-                    src="https://forms.office.com/Pages/ResponsePage.aspx?id=DB_kKsqs8UCcY0lHX_OFEve0k-HNpBxMvK0hKS38wlxUODZBWFJSS0MxMUpaUVBEUlVKOVkwWUxORi4u&embed=true" 
-                    sandbox="allow-speakers allow-same-origin allow-scripts allow-forms"
-                    allowfullscreen>
+                    src="https://forms.office.com/r/WYeMVA1YSK?embed=true" 
+                    frameborder="0" 
+                    marginwidth="0" 
+                    marginheight="0" 
+                    style="border: none; width:100%; height:100%;" 
+                    allowfullscreen 
+                    webkitallowfullscreen 
+                    mozallowfullscreen 
+                    msallowfullscreen>
                     載入中…
                 </iframe>
             </div>
