@@ -171,7 +171,7 @@
         .step-info { color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .video-container div#player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .form-container iframe { width: 100%; height: 100%; border: none; }
@@ -259,12 +259,13 @@
                 請勿快轉，確保了解英業達股份有限公司桃科廠(TAO)廠區作業規範及緊急通報流程。
             </p>
             
+            <!-- 🎬 YouTube API 載入位置 -->
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/ndPOGrauZj4?rel=0&modestbranding=1" allowfullscreen></iframe>
+                <div id="player"></div>
             </div>
             
             <div id="timer-status" class="timer-box">
-                ⏳ 系統正在確認影片觀看進度，測驗卷將於 <span id="countdown">180</span> 秒後自動解鎖...
+                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">15</span> 秒後將自動解鎖測驗卷...
             </div>
         </div>
 
@@ -293,11 +294,90 @@
     </div>
 </div>
 
+<!-- 載入 YouTube API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRI7QCClV56d4zryzYTg56GQIaVZWUdFm7thymIr7m5FgQOHKHIhuoolaoUaIUPm0XNLBIPgXMwubd/pub?gid=0&single=true&output=csv";
     
-    let videoDuration = 180; 
+    // ⏱️ 設定測試目標時間（15 秒）
+    const targetWatchSeconds = 15; 
+    let watchedSeconds = 0;
+    let player;
+    let checkInterval = null;
+    let isUnlocked = false;
 
+    // 1. 初始化 YouTube API 播放器
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            videoId: 'ndPOGrauZj4',
+            playerVars: {
+                'rel': 0,
+                'modestbranding': 1,
+                'playsinline': 1
+            },
+            events: {
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    // 2. 監聽影片播放狀態變更
+    function onPlayerStateChange(event) {
+        if (isUnlocked) return;
+
+        // 當影片處於「播放中 (PLAYING: 1)」狀態時，啟動真實時間累計
+        if (event.data === YT.PlayerState.PLAYING) {
+            if (!checkInterval) {
+                checkInterval = setInterval(trackRealPlayTime, 1000);
+            }
+        } else {
+            // 當暫停、緩衝或停止時，暫停計時
+            if (checkInterval) {
+                clearInterval(checkInterval);
+                checkInterval = null;
+            }
+            if (event.data === YT.PlayerState.PAUSED) {
+                updateStatusText("⏸️ 影片已暫停，請繼續播放以繼續倒數...");
+            }
+        }
+    }
+
+    // 3. 計算真實播放時間
+    function trackRealPlayTime() {
+        if (isUnlocked) return;
+
+        watchedSeconds++;
+        const remaining = targetWatchSeconds - watchedSeconds;
+        
+        const countdownEl = document.getElementById('countdown');
+        if (countdownEl) countdownEl.innerText = Math.max(0, remaining);
+
+        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${Math.max(0, remaining)}</span> 秒後自動解鎖測驗`);
+
+        // 當累計播放達到指定的 15 秒
+        if (watchedSeconds >= targetWatchSeconds) {
+            isUnlocked = true;
+            if (checkInterval) clearInterval(checkInterval);
+
+            const timerStatusEl = document.getElementById('timer-status');
+            timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。";
+            timerStatusEl.style.backgroundColor = "#e8f5e9";
+            timerStatusEl.style.color = "#2e7d32";
+            timerStatusEl.style.borderColor = "#c8e6c9";
+
+            document.getElementById('exam-section').classList.remove('hidden');
+        }
+    }
+
+    function updateStatusText(htmlContent) {
+        const timerStatusEl = document.getElementById('timer-status');
+        if (timerStatusEl && !isUnlocked) {
+            timerStatusEl.innerHTML = htmlContent;
+        }
+    }
+
+    // 4. Google 試算表登入驗證邏輯
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -317,7 +397,6 @@
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
             const csvText = await response.text();
             
-            // 將 CSV 按列切分，逐列比對姓名與驗證碼
             const rows = csvText.split('\n');
             let isValid = false;
 
@@ -327,7 +406,6 @@
                     const sheetName = cells[0].trim();
                     const sheetCode = cells[1].trim().toUpperCase();
 
-                    // 當姓名與驗證碼同在一列且匹配成功時
                     if (sheetName === inputName && sheetCode === inputCode) {
                         isValid = true;
                         break;
@@ -339,8 +417,6 @@
                 document.getElementById('login-gate').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
                 window.scrollTo(0, 0);
-
-                startVideoTimer();
             } else {
                 errorMsg.innerText = "姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。";
                 errorMsg.classList.remove('hidden');
@@ -355,28 +431,7 @@
         }
     }
 
-    function startVideoTimer() {
-        const countdownEl = document.getElementById('countdown');
-        const timerStatusEl = document.getElementById('timer-status');
-        const examSection = document.getElementById('exam-section');
-
-        const timer = setInterval(() => {
-            videoDuration--;
-            if (countdownEl) countdownEl.innerText = videoDuration;
-
-            if (videoDuration <= 0) {
-                clearInterval(timer);
-                timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。";
-                timerStatusEl.style.backgroundColor = "#e8f5e9";
-                timerStatusEl.style.color = "#2e7d32";
-                timerStatusEl.style.borderColor = "#c8e6c9";
-                
-                examSection.classList.remove('hidden');
-            }
-        }, 1000);
-    }
-
-    // 按 Enter 鍵自動觸發驗證
+    // 按 Enter 鍵觸發驗證
     document.getElementById('password-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') checkPassword();
     });
