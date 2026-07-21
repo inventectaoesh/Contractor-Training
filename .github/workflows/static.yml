@@ -87,16 +87,17 @@
             justify-content: center; 
         }
 
-        /* ⛑️ 安全帽 ICON */
-        .login-icon-box { position: relative; display: inline-block; margin-bottom: 10px; }
+        /* ⛑️ 安全帽 ICON (位於上方，尺寸放大為 68px) */
+        .login-icon-box { position: relative; display: inline-block; margin-bottom: 12px; }
         .login-icon { 
-            font-size: 64px; 
+            font-size: 68px; 
             filter: drop-shadow(0 6px 12px rgba(200, 35, 43, 0.25)); 
             animation: pulse-ehs 3s infinite ease-in-out; 
             display: inline-block; 
         }
         @keyframes pulse-ehs { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
+        /* 標題 (位於安全帽 ICON 下方) */
         .login-top-half h2 { font-size: 22px; color: var(--inventec-red); font-weight: 800; line-height: 1.4; }
 
         .divider-red-line { width: 100%; height: 3px; background-color: var(--inventec-red); }
@@ -172,7 +173,7 @@
             .platform-subtitle { font-size: 10px; letter-spacing: 0.5px; }
             .login-top-half { padding: 20px 15px 15px 15px; }
             .login-top-half h2 { font-size: 18px; }
-            .login-icon { font-size: 52px; }
+            .login-icon { font-size: 54px; }
             .login-bottom-half { padding: 20px 15px; }
             .osh-card { padding: 20px !important; }
             .form-container { height: 850px; }
@@ -186,15 +187,16 @@
 
 <div class="osh-container">
     
-    <!-- 🏆 Header 區 -->
+    <!-- 🏆 Header 區塊 (需求 1：英業達桃科廠(TAO) 承攬商安全衛生數位學習平台) -->
     <div class="header-logo-area">
         <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo" class="inventec-logo">
         <h1 class="platform-title">英業達桃科廠(TAO) 承攬商安全衛生數位學習平台</h1>
         <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
     </div>
 
-    <!-- 🔒 驗證登入關卡 (粗體字更新) -->
+    <!-- 🔒 驗證登入關卡 -->
     <div id="login-gate" class="osh-card">
+        <!-- 上半部 (需求 2：標題改為「承攬商人員登入」，且安全帽 ICON 移至上方並放大) -->
         <div class="login-top-half">
             <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
             <h2>承攬商人員登入</h2>
@@ -202,10 +204,11 @@
 
         <div class="divider-red-line"></div>
 
+        <!-- 下半部 (需求 3 & 4：文字內容與指定粗體項目) -->
         <div class="login-bottom-half">
-            <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.5;">
+            <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
                 本平台僅開放供本公司審查合格之承攬商人員使用。<br>
-                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權碼</strong>。
+                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部</strong>發放之授權碼。
             </p>
             
             <div class="password-group">
