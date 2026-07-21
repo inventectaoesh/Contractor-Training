@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英業達股份有限公司桃科廠(TAO)承攬商安全衛生數位學習平台 - Inventec HSE</title>
+    <title>英業達桃科廠(TAO) 承攬商安全衛生數位學習平台 - Inventec HSE</title>
     <style>
         :root {
             --inventec-red: #c8232b; 
@@ -41,9 +41,32 @@
             border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: var(--shadow);
         }
 
-        .inventec-logo { max-width: 280px; width: 80%; height: auto; margin-bottom: 8px; display: inline-block; mix-blend-mode: multiply; }
-        .platform-title { text-align: center; font-size: 24px; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--inventec-red); font-weight: 800; line-height: 1.3; }
-        .platform-subtitle { text-align: center; color: var(--text-light); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .inventec-logo { 
+            max-width: 280px; 
+            width: 80%; 
+            height: auto; 
+            margin-bottom: 8px; 
+            display: inline-block; 
+            mix-blend-mode: multiply; 
+        }
+
+        .platform-title { 
+            text-align: center; 
+            font-size: 24px; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 4px; 
+            color: var(--inventec-red); 
+            font-weight: 800; 
+            line-height: 1.3; 
+        }
+
+        .platform-subtitle { 
+            text-align: center; 
+            color: var(--text-light); 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
 
         /* 門禁卡片 */
         .osh-card {
@@ -54,13 +77,38 @@
 
         /* 🔒 登入區塊 */
         #login-gate { display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; }
-        .login-top-half { padding: 30px 20px 20px 20px; text-align: center; display: flex; align-items: center; justify-content: center; }
-        .login-top-half h2 { font-size: 20px; color: var(--inventec-red); font-weight: 700; line-height: 1.4; }
-        .divider-red-line { width: 100%; height: 3px; background-color: var(--inventec-red); }
-        .login-bottom-half { padding: 25px 20px 30px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .login-icon-box { position: relative; display: inline-block; margin-bottom: 12px; }
-        .login-icon { font-size: 48px; filter: drop-shadow(0 4px 10px rgba(200, 35, 43, 0.25)); animation: pulse-ehs 3s infinite ease-in-out; display: inline-block; }
+        
+        .login-top-half { 
+            padding: 30px 20px 15px 20px; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* ⛑️ 安全帽 ICON */
+        .login-icon-box { position: relative; display: inline-block; margin-bottom: 10px; }
+        .login-icon { 
+            font-size: 64px; 
+            filter: drop-shadow(0 6px 12px rgba(200, 35, 43, 0.25)); 
+            animation: pulse-ehs 3s infinite ease-in-out; 
+            display: inline-block; 
+        }
         @keyframes pulse-ehs { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+        .login-top-half h2 { font-size: 22px; color: var(--inventec-red); font-weight: 800; line-height: 1.4; }
+
+        .divider-red-line { width: 100%; height: 3px; background-color: var(--inventec-red); }
+
+        .login-bottom-half { 
+            padding: 25px 20px 30px 20px; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
 
         .password-group { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 380px; margin: 20px auto 0 auto; gap: 12px; }
         input[type="text"] { width: 100%; padding: 12px; font-size: 16px; border: 2px solid var(--inventec-red); background: rgba(255, 255, 255, 0.95); border-radius: 8px; color: var(--text-dark); transition: var(--transition); text-align: center; letter-spacing: 1px; font-weight: bold; }
@@ -123,7 +171,8 @@
             .platform-title { font-size: 18px; }
             .platform-subtitle { font-size: 10px; letter-spacing: 0.5px; }
             .login-top-half { padding: 20px 15px 15px 15px; }
-            .login-top-half h2 { font-size: 16px; }
+            .login-top-half h2 { font-size: 18px; }
+            .login-icon { font-size: 52px; }
             .login-bottom-half { padding: 20px 15px; }
             .osh-card { padding: 20px !important; }
             .form-container { height: 850px; }
@@ -140,21 +189,23 @@
     <!-- 🏆 Header 區 -->
     <div class="header-logo-area">
         <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo" class="inventec-logo">
-        <h1 class="platform-title">桃科廠(TAO) 承攬商安全衛生數位學習平台</h1>
+        <h1 class="platform-title">英業達桃科廠(TAO) 承攬商安全衛生數位學習平台</h1>
         <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
     </div>
 
-    <!-- 🔒 驗證登入關卡 -->
+    <!-- 🔒 驗證登入關卡 (粗體字更新) -->
     <div id="login-gate" class="osh-card">
         <div class="login-top-half">
-            <h2>英業達股份有限公司桃科廠(TAO)<br>承攬商系統驗證</h2>
-        </div>
-        <div class="divider-red-line"></div>
-        <div class="login-bottom-half">
             <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
+            <h2>承攬商人員登入</h2>
+        </div>
+
+        <div class="divider-red-line"></div>
+
+        <div class="login-bottom-half">
             <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.5;">
-                本平台僅開放供本公司審查合格之承攬商人員進修使用。<br>
-                請輸入您的<strong>中文姓名</strong>與由<strong>廠區安衛部發放之授權碼</strong>。
+                本平台僅開放供本公司審查合格之承攬商人員使用。<br>
+                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權碼</strong>。
             </p>
             
             <div class="password-group">
@@ -186,7 +237,7 @@
             </div>
             
             <div id="timer-status" class="timer-box">
-                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">15</span> 秒後將自動解鎖測驗卷...
+                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">25</span> 秒後將自動解鎖測驗卷...
             </div>
         </div>
 
@@ -200,8 +251,8 @@
             
             <div class="form-container">
                 <iframe 
-                    src="https://docs.google.com/forms/d/e/1FAIpQLSfvAvntX-4OLxYCUsjnGDXVoXk1u1HhxOY2LwPTBBUZjPr8jQ/viewform?embedded=true" 
-                    frameborder="0" marginheight="0" marginwidth="0">
+                    src="https://forms.office.com/r/WYeMVA1YSK?embed=true" 
+                    frameborder="0" marginheight="0" marginwidth="0" style="border: none; width:100%; height:100%;" allowfullscreen>
                     載入中…
                 </iframe>
             </div>
@@ -236,14 +287,14 @@
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRI7QCClV56d4zryzYTg56GQIaVZWUdFm7thymIr7m5FgQOHKHIhuoolaoUaIUPm0XNLBIPgXMwubd/pub?gid=0&single=true&output=csv";
     
     // ⏱️ 時間監控設定
-    const targetWatchSeconds = 15; // 測試用：目標觀看 15 秒解鎖問卷
-    const quizTime = 10;           // 測試用：第 10 秒觸發是非題彈窗
+    const targetWatchSeconds = 25; // 🎯 累計播放滿 25 秒自動解鎖測驗卷
+    const quizTime = 15;           // 🚨 影片播放到第 15 秒觸發是非題彈窗
 
     let watchedSeconds = 0;
     let player;
     let checkInterval = null;
     let isUnlocked = false;
-    let quizTriggered = false; // 紀錄是否觸發過是非題
+    let quizTriggered = false; 
 
     // 1. 初始化 YouTube 播放器
     function onYouTubeIframeAPIReady() {
@@ -277,7 +328,6 @@
     function trackRealPlayTime() {
         if (isUnlocked) return;
 
-        // 直接讀取 YouTube 影片當前的真實播放時間點
         const currentTime = Math.floor(player.getCurrentTime());
 
         watchedSeconds++;
@@ -288,14 +338,14 @@
 
         updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${Math.max(0, remaining)}</span> 秒後自動解鎖測驗`);
 
-        // 🚨 觸發是非題：當影片時間播放到指定的秒數時
+        // 🚨 觸發是非題：當影片播放到達第 15 秒時
         if (currentTime >= quizTime && !quizTriggered) {
             quizTriggered = true;
             pauseForQuiz();
             return;
         }
 
-        // 🎯 達標解鎖：達到目標總播放時間
+        // 🎯 達標解鎖：達到 25 秒總播放時間
         if (watchedSeconds >= targetWatchSeconds) {
             isUnlocked = true;
             if (checkInterval) clearInterval(checkInterval);
@@ -313,10 +363,10 @@
     // 🛑 觸發測驗彈窗
     function pauseForQuiz() {
         if (player && player.pauseVideo) {
-            player.pauseVideo(); // 強制暫停影片
+            player.pauseVideo(); 
         }
         if (checkInterval) {
-            clearInterval(checkInterval); // 強制暫停計時器
+            clearInterval(checkInterval); 
             checkInterval = null;
         }
         updateStatusText("🚨 已觸發專心度隨堂抽考，請答對彈窗問題以繼續播放...");
@@ -336,7 +386,6 @@
                 document.getElementById('quiz-modal').classList.add('hidden');
                 feedback.style.display = "none";
                 
-                // 答對後自動恢復播放與計時
                 if (player && player.playVideo) {
                     player.playVideo();
                 }
