@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英業達桃科廠(TAO) 承攬商安全衛生數位學習平台 - Inventec(TAO) Safety & Health Dept.</title>
+    <title>英業達桃科廠(TAO) 承攬商安全衛生數位學習平台 - Inventec HSE</title>
     <style>
         :root {
             --inventec-red: #c8232b; 
@@ -59,6 +59,8 @@
             font-weight: 800; 
             line-height: 1.3; 
         }
+
+        .title-br { display: none; } /* 桌機版不強制換行 */
 
         .platform-subtitle { 
             text-align: center; 
@@ -168,7 +170,8 @@
             body { padding: 8px; }
             .header-logo-area { padding: 15px 10px; }
             .inventec-logo { max-width: 200px; }
-            .platform-title { font-size: 18px; }
+            .platform-title { font-size: 18px; line-height: 1.4; }
+            .title-br { display: inline; } /* 手機版啟用換行 */
             .platform-subtitle { font-size: 10px; letter-spacing: 0.5px; }
             .login-top-half { padding: 20px 15px 15px 15px; }
             .login-top-half h2 { font-size: 18px; }
@@ -189,7 +192,7 @@
     <!-- 🏆 Header 區塊 -->
     <div class="header-logo-area">
         <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo" class="inventec-logo">
-        <h1 class="platform-title">英業達桃科廠(TAO) 承攬商安全衛生數位學習平台</h1>
+        <h1 class="platform-title">英業達桃科廠(TAO)<br class="title-br">承攬商安全衛生數位學習平台</h1>
         <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
     </div>
 
@@ -205,7 +208,7 @@
         <div class="login-bottom-half">
             <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
                 本平台僅開放供本公司審查合格之承攬商人員使用。<br>
-                請輸入您的<strong>中文姓名<strong>與由英業達(TAO)安全衛生部<strong>發放之授權碼</strong>。
+                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權碼</strong>。
             </p>
             
             <div class="password-group">
@@ -214,7 +217,7 @@
                 <button id="verify-btn" onclick="checkPassword()" class="login-btn">認證登入</button>
             </div>
 
-            <div id="error-message" class="error-msg hidden">姓名或驗證碼不正確，請重新輸入或洽詢英業達(TAO)安全衛生部。</div>
+            <div id="error-message" class="error-msg hidden">姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。</div>
         </div>
     </div>
 
@@ -247,7 +250,11 @@
                 <div class="step-number">02</div>
                 <h2>線上環安衛學科測驗</h2>
             </div>
-            <p class="step-info">已完成影片觀看，請在下方視窗直接完成測驗。及格分數為 <strong>80 分</strong>，未及格者請重新測驗。完成後系統將自動記錄，不需列印紙本。</p>
+            <p class="step-info">
+                已完成影片觀看，請在下方視窗直接完成測驗。<br>
+                及格分數為 <strong>70 分</strong>，未及格者請重新測驗，若不及格將不予以發放施工許可證。<br>
+                完成後系統將自動記錄，不需列印紙本。
+            </p>
             
             <div class="form-container">
                 <iframe 
@@ -287,7 +294,7 @@
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRI7QCClV56d4zryzYTg56GQIaVZWUdFm7thymIr7m5FgQOHKHIhuoolaoUaIUPm0XNLBIPgXMwubd/pub?gid=0&single=true&output=csv";
     
     // ⏱️ 時間監控設定
-    const targetWatchSeconds = 20; // 🎯 累計播放滿 20 秒自動解鎖測驗卷
+    const targetWatchSeconds = 25; // 🎯 累計播放滿 25 秒自動解鎖測驗卷
     const quizTime = 15;           // 🚨 影片播放到第 15 秒觸發是非題彈窗
 
     let watchedSeconds = 0;
@@ -345,7 +352,7 @@
             return;
         }
 
-        // 🎯 達標解鎖：達到 20 秒總播放時間
+        // 🎯 達標解鎖：達到 25 秒總播放時間
         if (watchedSeconds >= targetWatchSeconds) {
             isUnlocked = true;
             if (checkInterval) clearInterval(checkInterval);
@@ -392,7 +399,7 @@
             }, 1200);
         } else {
             feedback.style.color = "#d32f2f";
-            feedback.innerText = "❌ 答案不正確，請確認安全規範並重新選擇！";
+            feedback.innerText = "❌ 答案不正確，請重新確認安全規範並重新選擇！";
         }
     }
 
@@ -444,7 +451,7 @@
                 document.getElementById('main-content').classList.remove('hidden');
                 window.scrollTo(0, 0);
             } else {
-                errorMsg.innerText = "姓名或驗證碼不正確，請重新輸入或洽詢英業達(TAO)安全衛生部。";
+                errorMsg.innerText = "姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。";
                 errorMsg.classList.remove('hidden');
             }
         } catch (error) {
