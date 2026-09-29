@@ -387,7 +387,7 @@
         }
     }
 
-    // 🔑 修正後的 Google 試算表登入驗證函數
+    // 🚀 全新 UTF-8 強制解碼與全列比對登入邏輯
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -404,31 +404,33 @@
         btn.disabled = true;
 
         try {
+            // 抓取原始 ArrayBuffer，透過 TextDecoder 強制指定 UTF-8 解碼防亂碼
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
-            let csvText = await response.text();
-            
-            // 1. 清除 CSV 開頭的隱藏 BOM 字元
+            const buffer = await response.arrayBuffer();
+            const decoder = new TextDecoder('utf-8');
+            let csvText = decoder.decode(buffer);
+
+            // 清除 BOM 頭
             csvText = csvText.replace(/^\ufeff/, '');
 
-            // 2. 切割每一列（相容 \r\n 與 \n）
             const rows = csvText.split(/\r?\n/);
             let isValid = false;
 
             for (let row of rows) {
-                if (!row.trim()) continue; // 跳過空行
+                if (!row.trim()) continue;
 
-                // 3. 使用正則表達式精準分割 CSV 欄位（相容逗號、雙引號）
-                const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+                // 拆分每一列欄位並洗淨文字
+                const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/).map(cell => 
+                    cell.replace(/^["'\s]+|["'\s]+$/g, '').trim()
+                );
 
-                if (cells.length >= 2) {
-                    // 清除外層雙引號與多餘空白
-                    const sheetName = cells[0].replace(/^["'\s]+|["'\s]+$/g, '').trim();
-                    const sheetCode = cells[1].replace(/^["'\s]+|["'\s]+$/g, '').trim().toUpperCase();
+                // 全列交叉比對：確保當列同時包含輸入的「姓名」與「驗證碼」
+                const hasName = cells.some(cell => cell === inputName);
+                const hasCode = cells.some(cell => cell.toUpperCase() === inputCode);
 
-                    if (sheetName === inputName && sheetCode === inputCode) {
-                        isValid = true;
-                        break;
-                    }
+                if (hasName && hasCode) {
+                    isValid = true;
+                    break;
                 }
             }
 
