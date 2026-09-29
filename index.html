@@ -34,7 +34,6 @@
 
         .osh-container { max-width: 900px; margin: 0 auto; padding-top: 5px; padding-bottom: 30px; }
 
-        /* 🏆 上方 Header 區塊 */
         .header-logo-area {
             text-align: center; margin-bottom: 15px; background: rgba(255, 255, 255, 0.8);
             padding: 20px 15px; border-radius: 16px; backdrop-filter: blur(8px);
@@ -60,7 +59,7 @@
             line-height: 1.3; 
         }
 
-        .title-br { display: none; } /* 桌機版不強制換行 */
+        .title-br { display: none; }
 
         .platform-subtitle { 
             text-align: center; 
@@ -70,14 +69,12 @@
             letter-spacing: 1px; 
         }
 
-        /* 門禁卡片 */
         .osh-card {
             background-color: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow);
             margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px); transition: var(--transition);
         }
 
-        /* 🔒 登入區塊 */
         #login-gate { display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; }
         
         .login-top-half { 
@@ -89,7 +86,6 @@
             justify-content: center; 
         }
 
-        /* ⛑️ 安全帽 ICON */
         .login-icon-box { position: relative; display: inline-block; margin-bottom: 12px; }
         .login-icon { 
             font-size: 68px; 
@@ -121,7 +117,6 @@
 
         .error-msg { color: #d32f2f; margin-top: 15px; font-weight: bold; background-color: #ffebee; padding: 10px 15px; border-radius: 8px; font-size: 13px; width: 100%; max-width: 380px; }
 
-        /* 影片與測驗區塊 */
         .step-header { display: flex; align-items: center; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid #ecdcd0; }
         .step-number { background-color: var(--inventec-red); color: white; font-weight: bold; font-size: 18px; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; }
         .step-info { color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.7; }
@@ -137,7 +132,6 @@
         .osh-footer { text-align: center; font-size: 11px; color: #7c6a62; margin-top: 30px; border-top: 1px solid #ecdcd0; padding-top: 15px; }
         .hidden { display: none !important; }
 
-        /* ❓ 隨堂抽考彈窗遮罩樣式 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.8);
@@ -171,7 +165,7 @@
             .header-logo-area { padding: 15px 10px; }
             .inventec-logo { max-width: 200px; }
             .platform-title { font-size: 18px; line-height: 1.4; }
-            .title-br { display: inline; } /* 手機版啟用換行 */
+            .title-br { display: inline; }
             .platform-subtitle { font-size: 10px; letter-spacing: 0.5px; }
             .login-top-half { padding: 20px 15px 15px 15px; }
             .login-top-half h2 { font-size: 18px; }
@@ -188,15 +182,12 @@
 <body>
 
 <div class="osh-container">
-    
-    <!-- 🏆 Header 區塊 -->
     <div class="header-logo-area">
         <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo" class="inventec-logo">
         <h1 class="platform-title">英業達桃科廠(TAO)<br class="title-br">承攬商安全衛生數位學習平台</h1>
         <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
     </div>
 
-    <!-- 🔒 驗證登入關卡 -->
     <div id="login-gate" class="osh-card">
         <div class="login-top-half">
             <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
@@ -221,10 +212,7 @@
         </div>
     </div>
 
-    <!-- 主內容區 -->
     <div id="main-content" class="hidden">
-        
-        <!-- 步驟 01：影片區 -->
         <div class="osh-card osh-card-inner" style="padding: 25px;">
             <div class="step-header">
                 <div class="step-number">01</div>
@@ -244,7 +232,6 @@
             </div>
         </div>
 
-        <!-- 步驟 02：測驗區（內嵌 Google 表單） -->
         <div id="exam-section" class="osh-card osh-card-inner hidden" style="padding: 25px;">
             <div class="step-header">
                 <div class="step-number">02</div>
@@ -272,7 +259,6 @@
     </div>
 </div>
 
-<!-- ❓ 隨堂是非題彈窗 -->
 <div id="quiz-modal" class="modal-overlay hidden">
     <div class="modal-card">
         <h3>🚨 專心度隨堂抽考</h3>
@@ -287,15 +273,13 @@
     </div>
 </div>
 
-<!-- 載入 YouTube API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRI7QCClV56d4zryzYTg56GQIaVZWUdFm7thymIr7m5FgQOHKHIhuoolaoUaIUPm0XNLBIPgXMwubd/pub?gid=0&single=true&output=csv";
     
-    // ⏱️ 時間監控設定
-    const targetWatchSeconds = 25; // 🎯 累計播放滿 25 秒自動解鎖測驗卷
-    const quizTime = 15;           // 🚨 影片播放到第 15 秒觸發是非題彈窗
+    const targetWatchSeconds = 25; 
+    const quizTime = 15;           
 
     let watchedSeconds = 0;
     let player;
@@ -303,7 +287,6 @@
     let isUnlocked = false;
     let quizTriggered = false; 
 
-    // 1. 初始化 YouTube 播放器
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
             videoId: 'pe8jBnIqoRI',
@@ -312,7 +295,6 @@
         });
     }
 
-    // 2. 監聽影片狀態
     function onPlayerStateChange(event) {
         if (isUnlocked) return;
 
@@ -331,7 +313,6 @@
         }
     }
 
-    // 3. 秒數監控與連動邏輯
     function trackRealPlayTime() {
         if (isUnlocked) return;
 
@@ -345,14 +326,12 @@
 
         updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${Math.max(0, remaining)}</span> 秒後自動解鎖測驗`);
 
-        // 🚨 觸發是非題：當影片播放到達第 15 秒時
         if (currentTime >= quizTime && !quizTriggered) {
             quizTriggered = true;
             pauseForQuiz();
             return;
         }
 
-        // 🎯 達標解鎖：達到 25 秒總播放時間
         if (watchedSeconds >= targetWatchSeconds) {
             isUnlocked = true;
             if (checkInterval) clearInterval(checkInterval);
@@ -367,7 +346,6 @@
         }
     }
 
-    // 🛑 觸發測驗彈窗
     function pauseForQuiz() {
         if (player && player.pauseVideo) {
             player.pauseVideo(); 
@@ -380,7 +358,6 @@
         document.getElementById('quiz-modal').classList.remove('hidden');
     }
 
-    // 🟢 作答判斷（圈為正確：isCorrect = true）
     function submitAnswer(isCorrect) {
         const feedback = document.getElementById('quiz-feedback');
         feedback.style.display = "block";
@@ -410,7 +387,7 @@
         }
     }
 
-    // 4. Google 試算表登入驗證
+    // 🔑 修正後的 Google 試算表登入驗證函數
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -428,16 +405,25 @@
 
         try {
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
-            const csvText = await response.text();
+            let csvText = await response.text();
             
-            const rows = csvText.split('\n');
+            // 1. 清除 CSV 開頭的隱藏 BOM 字元
+            csvText = csvText.replace(/^\ufeff/, '');
+
+            // 2. 切割每一列（相容 \r\n 與 \n）
+            const rows = csvText.split(/\r?\n/);
             let isValid = false;
 
             for (let row of rows) {
-                const cells = row.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
+                if (!row.trim()) continue; // 跳過空行
+
+                // 3. 使用正則表達式精準分割 CSV 欄位（相容逗號、雙引號）
+                const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/);
+
                 if (cells.length >= 2) {
-                    const sheetName = cells[0].trim();
-                    const sheetCode = cells[1].trim().toUpperCase();
+                    // 清除外層雙引號與多餘空白
+                    const sheetName = cells[0].replace(/^["'\s]+|["'\s]+$/g, '').trim();
+                    const sheetCode = cells[1].replace(/^["'\s]+|["'\s]+$/g, '').trim().toUpperCase();
 
                     if (sheetName === inputName && sheetCode === inputCode) {
                         isValid = true;
