@@ -190,7 +190,7 @@
 
     <div id="login-gate" class="osh-card">
         <div class="login-top-half">
-            <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
+            <div class="login-icon-box"><div class="login-icon">⛑️️</div></div>
             <h2>承攬商人員登入</h2>
         </div>
 
@@ -276,7 +276,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-    // 🔑 指向正確「驗證碼發放管理」頁籤 (gid=192837879) 的 CSV 網址
+    // 正確目標分頁的 CSV 網址
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
     
     const targetWatchSeconds = 25; 
@@ -388,7 +388,7 @@
         }
     }
 
-    // 🚀 全新登入驗證機制：自動解碼與全列容錯比對
+    // 🔑 最終優化版驗證函數（修正中文 UTF-8 解碼與字串淨化）
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -405,40 +405,41 @@
         btn.disabled = true;
 
         try {
-            // 抓取原始 ArrayBuffer，透過 TextDecoder 強制解碼
+            // 加入時間戳記避免瀏覽器 Cache 快取舊資料
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
-            const buffer = await response.arrayBuffer();
             
-            let csvText = "";
-            try {
-                const big5Decoder = new TextDecoder('big5');
-                csvText = big5Decoder.decode(buffer);
-            } catch (e) {
-                const utf8Decoder = new TextDecoder('utf-8');
-                csvText = utf8Decoder.decode(buffer);
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
             }
 
-            // 清除 BOM 頭
+            let csvText = await response.text();
+
+            // 1. 清除 UTF-8 檔頭的隱藏 BOM 字元 (\ufeff)
             csvText = csvText.replace(/^\ufeff/, '');
 
+            // 2. 切割每一列
             const rows = csvText.split(/\r?\n/);
             let isValid = false;
 
             for (let row of rows) {
                 if (!row.trim()) continue;
 
-                // 拆分每一列欄位並洗淨文字
+                // 3. 標準 CSV 欄位拆分（處理雙引號與逗號）
                 const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/).map(cell => 
-                    cell.replace(/^["'\s]+|["'\s]+$/g, '').trim()
+                    cell.replace(/^["'\s\uFEFF]+|["'\s\uFEFF]+$/g, '').trim()
                 );
 
-                // 全列交叉比對：當列同時包含輸入的「姓名」與「驗證碼」即通過
-                const hasName = cells.some(cell => cell === inputName);
-                const hasCode = cells.some(cell => cell.toUpperCase() === inputCode);
+                // 4. 比對第一欄(姓名) 與 第二欄(驗證碼)，同時進行全列容錯比對
+                if (cells.length >= 2) {
+                    const nameCell = cells[0];
+                    const codeCell = cells[1].toUpperCase();
 
-                if (hasName && hasCode) {
-                    isValid = true;
-                    break;
+                    // 精確比對 A、B 欄，或全列包含
+                    if ((nameCell === inputName && codeCell === inputCode) ||
+                        (cells.some(c => c === inputName) && cells.some(c => c.toUpperCase() === inputCode))) {
+                        isValid = true;
+                        break;
+                    }
                 }
             }
 
