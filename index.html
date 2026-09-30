@@ -190,7 +190,7 @@
 
     <div id="login-gate" class="osh-card">
         <div class="login-top-half">
-            <div class="login-icon-box"><div class="login-icon">⛑️️</div></div>
+            <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
             <h2>承攬商人員登入</h2>
         </div>
 
@@ -276,7 +276,6 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-    // 正確目標分頁的 CSV 網址
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
     
     const targetWatchSeconds = 25; 
@@ -288,12 +287,30 @@
     let isUnlocked = false;
     let quizTriggered = false; 
 
+    // 🚀 防護強化：增加 enablejsapi、origin 跨網域授權與 onerror 自動修復
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
             videoId: 'pe8jBnIqoRI',
-            playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
-            events: { 'onStateChange': onPlayerStateChange }
+            playerVars: { 
+                'rel': 0, 
+                'modestbranding': 1, 
+                'playsinline': 1,
+                'enablejsapi': 1,
+                'origin': window.location.origin
+            },
+            events: { 
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
         });
+    }
+
+    // 💡 若 YouTube 播放器載入異常，自動重新載入影片救援
+    function onPlayerError(event) {
+        console.warn("YouTube 播放器載入異常，啟動自動救援修復機制...", event.data);
+        if (player && player.loadVideoById) {
+            player.loadVideoById('pe8jBnIqoRI');
+        }
     }
 
     function onPlayerStateChange(event) {
@@ -309,7 +326,7 @@
                 checkInterval = null;
             }
             if (event.data === YT.PlayerState.PAUSED && !quizTriggered) {
-                updateStatusText("⏸️ 影片已暫停，請繼續播放以繼續計時...");
+                updateStatusText("⏸️️ 影片已暫停，請繼續播放以繼續計時...");
             }
         }
     }
@@ -388,7 +405,6 @@
         }
     }
 
-    // 🔑 最終優化版驗證函數（修正中文 UTF-8 解碼與字串淨化）
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -405,7 +421,6 @@
         btn.disabled = true;
 
         try {
-            // 加入時間戳記避免瀏覽器 Cache 快取舊資料
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
             
             if (!response.ok) {
@@ -413,28 +428,22 @@
             }
 
             let csvText = await response.text();
-
-            // 1. 清除 UTF-8 檔頭的隱藏 BOM 字元 (\ufeff)
             csvText = csvText.replace(/^\ufeff/, '');
 
-            // 2. 切割每一列
             const rows = csvText.split(/\r?\n/);
             let isValid = false;
 
             for (let row of rows) {
                 if (!row.trim()) continue;
 
-                // 3. 標準 CSV 欄位拆分（處理雙引號與逗號）
                 const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/).map(cell => 
                     cell.replace(/^["'\s\uFEFF]+|["'\s\uFEFF]+$/g, '').trim()
                 );
 
-                // 4. 比對第一欄(姓名) 與 第二欄(驗證碼)，同時進行全列容錯比對
                 if (cells.length >= 2) {
                     const nameCell = cells[0];
                     const codeCell = cells[1].toUpperCase();
 
-                    // 精確比對 A、B 欄，或全列包含
                     if ((nameCell === inputName && codeCell === inputCode) ||
                         (cells.some(c => c === inputName) && cells.some(c => c.toUpperCase() === inputCode))) {
                         isValid = true;
