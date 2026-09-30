@@ -228,7 +228,7 @@
             </div>
             
             <div id="timer-status" class="timer-box">
-                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">25</span> 秒後將自動解鎖測驗卷...
+                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">1 小時 26 分 20 秒</span> 後將自動解鎖測驗卷...
             </div>
         </div>
 
@@ -278,8 +278,9 @@
 <script>
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
     
-    const targetWatchSeconds = 25; 
-    const quizTime = 15;           
+    // ⏱️ 秒數設定：1小時26分20秒 = 5180 秒；1小時 = 3600 秒
+    const targetWatchSeconds = 5180; 
+    const quizTime = 3600;           
 
     let watchedSeconds = 0;
     let player;
@@ -287,30 +288,25 @@
     let isUnlocked = false;
     let quizTriggered = false; 
 
-    // 🚀 防護強化：增加 enablejsapi、origin 跨網域授權與 onerror 自動修復
+    // 秒數轉換為易讀格式函式（例如：5180秒 -> 1 小時 26 分 20 秒）
+    function formatTimeText(totalSeconds) {
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        let result = "";
+        if (hrs > 0) result += hrs + " 小時 ";
+        if (mins > 0 || hrs > 0) result += mins + " 分 ";
+        result += secs + " 秒";
+        return result;
+    }
+
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
             videoId: 'pe8jBnIqoRI',
-            playerVars: { 
-                'rel': 0, 
-                'modestbranding': 1, 
-                'playsinline': 1,
-                'enablejsapi': 1,
-                'origin': window.location.origin
-            },
-            events: { 
-                'onStateChange': onPlayerStateChange,
-                'onError': onPlayerError
-            }
+            playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+            events: { 'onStateChange': onPlayerStateChange }
         });
-    }
-
-    // 💡 若 YouTube 播放器載入異常，自動重新載入影片救援
-    function onPlayerError(event) {
-        console.warn("YouTube 播放器載入異常，啟動自動救援修復機制...", event.data);
-        if (player && player.loadVideoById) {
-            player.loadVideoById('pe8jBnIqoRI');
-        }
     }
 
     function onPlayerStateChange(event) {
@@ -326,7 +322,7 @@
                 checkInterval = null;
             }
             if (event.data === YT.PlayerState.PAUSED && !quizTriggered) {
-                updateStatusText("⏸️️ 影片已暫停，請繼續播放以繼續計時...");
+                updateStatusText("⏸️ 影片已暫停，請繼續播放以繼續計時...");
             }
         }
     }
@@ -337,12 +333,12 @@
         const currentTime = Math.floor(player.getCurrentTime());
 
         watchedSeconds++;
-        const remaining = targetWatchSeconds - watchedSeconds;
+        const remaining = Math.max(0, targetWatchSeconds - watchedSeconds);
         
         const countdownEl = document.getElementById('countdown');
-        if (countdownEl) countdownEl.innerText = Math.max(0, remaining);
+        if (countdownEl) countdownEl.innerText = formatTimeText(remaining);
 
-        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${Math.max(0, remaining)}</span> 秒後自動解鎖測驗`);
+        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${formatTimeText(remaining)}</span> 後自動解鎖測驗`);
 
         if (currentTime >= quizTime && !quizTriggered) {
             quizTriggered = true;
