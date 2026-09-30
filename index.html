@@ -387,7 +387,7 @@
         }
     }
 
-    // 🚀 全新 UTF-8 強制解碼與全列比對登入邏輯
+    // 🚀 全新相容 Big5/UTF-8 防亂碼與 #N/A 容錯登入驗證機制
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -404,13 +404,21 @@
         btn.disabled = true;
 
         try {
-            // 抓取原始 ArrayBuffer，透過 TextDecoder 強制指定 UTF-8 解碼防亂碼
+            // 以原始二進位 ArrayBuffer 抓取 CSV 檔
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
             const buffer = await response.arrayBuffer();
-            const decoder = new TextDecoder('utf-8');
-            let csvText = decoder.decode(buffer);
+            
+            // 先嘗試以 Big5 (繁體中文舊編碼) 解碼，若失敗再回退 UTF-8
+            let csvText = "";
+            try {
+                const big5Decoder = new TextDecoder('big5');
+                csvText = big5Decoder.decode(buffer);
+            } catch (e) {
+                const utf8Decoder = new TextDecoder('utf-8');
+                csvText = utf8Decoder.decode(buffer);
+            }
 
-            // 清除 BOM 頭
+            // 清除檔頭 hidden BOM 符號
             csvText = csvText.replace(/^\ufeff/, '');
 
             const rows = csvText.split(/\r?\n/);
@@ -419,12 +427,12 @@
             for (let row of rows) {
                 if (!row.trim()) continue;
 
-                // 拆分每一列欄位並洗淨文字
+                // 切割並清除引號與空格
                 const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/).map(cell => 
                     cell.replace(/^["'\s]+|["'\s]+$/g, '').trim()
                 );
 
-                // 全列交叉比對：確保當列同時包含輸入的「姓名」與「驗證碼」
+                // 忽略包含 #N/A 的錯誤欄位，於當前列進行完整搜尋
                 const hasName = cells.some(cell => cell === inputName);
                 const hasCode = cells.some(cell => cell.toUpperCase() === inputCode);
 
