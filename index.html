@@ -276,7 +276,8 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-    const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRI7QCClV56d4zryzYTg56GQIaVZWUdFm7thymIr7m5FgQOHKHIhuoolaoUaIUPm0XNLBIPgXMwubd/pub?gid=0&single=true&output=csv";
+    // 🔑 指向正確「驗證碼發放管理」頁籤 (gid=192837879) 的 CSV 網址
+    const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
     
     const targetWatchSeconds = 25; 
     const quizTime = 15;           
@@ -387,7 +388,7 @@
         }
     }
 
-    // 🚀 全新相容 Big5/UTF-8 防亂碼與 #N/A 容錯登入驗證機制
+    // 🚀 全新登入驗證機制：自動解碼與全列容錯比對
     async function checkPassword() {
         const inputName = document.getElementById('name-input').value.trim();
         const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
@@ -404,11 +405,10 @@
         btn.disabled = true;
 
         try {
-            // 以原始二進位 ArrayBuffer 抓取 CSV 檔
+            // 抓取原始 ArrayBuffer，透過 TextDecoder 強制解碼
             const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
             const buffer = await response.arrayBuffer();
             
-            // 先嘗試以 Big5 (繁體中文舊編碼) 解碼，若失敗再回退 UTF-8
             let csvText = "";
             try {
                 const big5Decoder = new TextDecoder('big5');
@@ -418,7 +418,7 @@
                 csvText = utf8Decoder.decode(buffer);
             }
 
-            // 清除檔頭 hidden BOM 符號
+            // 清除 BOM 頭
             csvText = csvText.replace(/^\ufeff/, '');
 
             const rows = csvText.split(/\r?\n/);
@@ -427,12 +427,12 @@
             for (let row of rows) {
                 if (!row.trim()) continue;
 
-                // 切割並清除引號與空格
+                // 拆分每一列欄位並洗淨文字
                 const cells = row.split(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/).map(cell => 
                     cell.replace(/^["'\s]+|["'\s]+$/g, '').trim()
                 );
 
-                // 忽略包含 #N/A 的錯誤欄位，於當前列進行完整搜尋
+                // 全列交叉比對：當列同時包含輸入的「姓名」與「驗證碼」即通過
                 const hasName = cells.some(cell => cell === inputName);
                 const hasCode = cells.some(cell => cell.toUpperCase() === inputCode);
 
