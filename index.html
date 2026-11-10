@@ -108,30 +108,8 @@
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: #000; }
         .video-container #player, .video-container iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: 0; }
 
-        /* 表單外框與透明防護罩設計 */
-        .form-container { 
-            position: relative; 
-            width: 100%; 
-            height: 900px; 
-            overflow: hidden; 
-            border-radius: 8px; 
-            border: 1px solid #ecdcd0; 
-            background-color: #ffffff; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-        }
+        .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .form-container iframe { width: 100%; height: 100%; border: none; }
-
-        /* 🛡️ 透明防護罩：絕對定位覆蓋在上方，高度涵蓋前兩題（姓名與驗證碼大約在表單上方 220px 內），讓滑鼠點不到，但下方測驗題目正常可以作答 */
-        .form-shield {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 220px; /* 覆蓋表單前兩題區域 */
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.01); /* 幾近全透明 */
-            cursor: not-allowed;
-        }
 
         .timer-box { margin-top: 15px; padding: 12px; background-color: var(--inventec-light-red); border: 1px solid #f5c6cb; border-radius: 8px; text-align: center; color: var(--inventec-red); font-weight: bold; font-size: 14px; }
 
@@ -177,7 +155,6 @@
             .login-bottom-half { padding: 20px 15px; }
             .osh-card { padding: 20px !important; }
             .form-container { height: 850px; }
-            .form-shield { height: 260px; } /* 手機版表單區塊較長，防護罩稍微加高 */
             .quiz-option-group { flex-direction: column; }
         }
 
@@ -193,6 +170,7 @@
         <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
     </div>
 
+    <!-- 登入大門 -->
     <div id="login-gate" class="osh-card">
         <div class="login-top-half">
             <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
@@ -217,7 +195,14 @@
         </div>
     </div>
 
+    <!-- 主學習與測驗畫面 -->
     <div id="main-content" class="hidden">
+        <!-- 顯示目前登入者身分提醒橫幅 -->
+        <div style="background: #e3f2fd; border: 1px solid #90caf9; padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: #0d47a1;">
+            <div>👤 目前登入身分：<span id="current-user-display" style="color: var(--inventec-red); font-size: 17px;"></span></div>
+            <button onclick="location.reload()" style="background: none; border: 1px solid #0d47a1; color: #0d47a1; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">切換帳號</button>
+        </div>
+
         <div class="osh-card osh-card-inner" style="padding: 25px;">
             <div class="step-header">
                 <div class="step-number">01</div>
@@ -243,23 +228,23 @@
                 <h2>線上環安衛學科測驗</h2>
             </div>
             <p class="step-info">
-                已完成影片觀看，您的個人身分已自動帶入並<strong>受安全防護罩保護（無法修改）</strong>。<br>
+                已完成影片觀看，您的個人身分（姓名與驗證碼）已由系統<strong>鎖定綁定</strong>。<br>
                 及格分數為 <strong>70 分</strong>。<br>
                 <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成指引：</span><br>
                 • <strong>若您考獲 70 分以上（及格）</strong>：請點擊上方表單送出後，點擊下方「✅ 我已及格並完成交卷」按鈕安全登出。<br>
-                • <strong>若未達 70 分（不及格）</strong>：請點擊下方「🔄 不及格重新測驗」按鈕重新作答。
+                • <strong>若未達 70 分（不及格）</strong>：可直接點擊下方「🔄 不及格重新測驗」按鈕重新作答（無需重新看影片，且身分維持不變）。
             </p>
  
-            <!-- 動態載入帶有預填資料與透明防護罩的 Google 表單容器 -->
+            <!-- 動態載入帶有嚴格綁定身分的 Google 表單容器 -->
             <div id="dynamic-form-container" class="form-container">
-                <!-- 透明防護罩會由 JS 動態生成，阻絕滑鼠點擊前兩題欄位 -->
+                <!-- 透過 JS 載入 iframe -->
             </div>
 
             <!-- 及格完成交卷按鈕（自動強制登出） -->
             <button onclick="finishAndLogout()" class="finish-action-btn">✅ 我已考試及格並完成交卷（結束並返回登入頁）</button>
 
-            <!-- 不及格重考按鈕 -->
-            <button onclick="reloadExamForm()" class="retry-action-btn">🔄 若剛才測驗未達 70 分（不及格），點此重新測驗</button>
+            <!-- 不及格重考按鈕（維持原登入身分直接重新載入表單，免重新看影片） -->
+            <button onclick="reloadExamForm()" class="retry-action-btn">🔄 若剛才測驗未達 70 分（不及格），點此重新測驗（無需重新看影片）</button>
         </div>
     </div>
 
@@ -269,6 +254,7 @@
     </div>
 </div>
 
+<!-- 隨堂抽考彈窗 -->
 <div id="quiz-modal" class="modal-overlay hidden">
     <div class="modal-card">
         <h3>🚨 專心度隨堂抽考</h3>
@@ -298,6 +284,7 @@
     let isUnlocked = false;
     let quizTriggered = false; 
 
+    // 全域身分綁定變數（一經登入後鎖死，重考也無法竄改）
     let loggedInName = "";
     let loggedInCode = "";
 
@@ -377,36 +364,35 @@
         const container = document.getElementById('dynamic-form-container');
         
         const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfvAvntX-4OLxYCUsjnGDXVoXk1u1HhxOY2LwPTBBUZjPr8jQ/viewform?usp=pp_url";
-        const entryNameId = "entry.1105263814";
-        const entryCodeId = "entry.13222723";
+        const entryNameId = "entry.1105263814"; // 中文姓名 ID
+        const entryCodeId = "entry.13222723";   // 登入驗證碼 ID
 
+        // 🔒 強制使用全域鎖定的登入身分組合網址，任何人無法在畫面上手動改名代考
         const encodedName = encodeURIComponent(loggedInName);
         const encodedCode = encodeURIComponent(loggedInCode);
 
         const finalUrl = `${formBaseUrl}&${entryNameId}=${encodedName}&${entryCodeId}=${encodedCode}&embedded=true&ts=` + new Date().getTime();
 
-        // 🛡️ 在表單 iframe 上方疊加一層 .form-shield 透明防護罩，滑鼠完全點不到上方欄位
         container.innerHTML = `
-            <div class="form-shield" title="此欄位已由系統安全鎖定，無法修改"></div>
             <iframe src="${finalUrl}" frameborder="0" marginheight="0" marginwidth="0" style="border: none; width:100%; height:100%;" allowfullscreen>
                 載入中…
             </iframe>
         `;
     }
 
-    // ✅ 及格完成交卷：彈出提示並自動強制歸零登出
+    // ✅ 及格完成交卷：安全登出
     function finishAndLogout() {
         if (confirm("確認您已在上方表單點擊「提交」送出試卷，且成績達 70 分以上嗎？\n\n點擊確定將安全登出系統並返回首頁。")) {
             alert("🎉 恭喜完成安全衛生教育訓練！系統已安全登出。");
-            location.reload(); // 強制重新整理回到登入大門
+            location.reload(); 
         }
     }
 
-    // 🔄 不及格重考：重新載入表單供補考
+    // 🔄 不及格重考：免重看影片，直接重新載入表單，且身分強制限死為原登入者，絕對無法幫別人代考
     function reloadExamForm() {
-        if (confirm("是否確認要重新填寫測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
+        if (confirm("是否確認要重新載入測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
             loadExamForm();
-            alert("表單已重新載入，您的姓名與驗證碼已保持帶入，請重新作答！");
+            alert("表單已重新載入，您的身分已自動鎖定帶入，請重新作答！");
         }
     }
 
@@ -499,8 +485,11 @@
             }
 
             if (isValid) {
+                // 🔒 鎖死全域身分
                 loggedInName = inputName;
                 loggedInCode = inputCode;
+
+                document.getElementById('current-user-display').innerText = `${loggedInName} (驗證碼: ${loggedInCode})`;
 
                 document.getElementById('login-gate').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
