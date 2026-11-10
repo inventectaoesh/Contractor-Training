@@ -93,7 +93,6 @@
         .login-btn { width: 100%; padding: 12px 24px; font-size: 16px; font-weight: 600; color: white; background: var(--inventec-red); border: none; border-radius: 8px; cursor: pointer; transition: var(--transition); white-space: nowrap; margin-top: 4px; }
         .login-btn:hover { background-color: #a61c22; }
 
-        /* 🌟 雙按鈕並排容器設計：電腦版並排、手機版自動上下堆疊 */
         .action-button-group {
             display: flex;
             gap: 15px;
@@ -119,19 +118,11 @@
             line-height: 1.4;
         }
 
-        .finish-action-btn {
-            background-color: #28a745;
-        }
-        .finish-action-btn:hover {
-            background-color: #218838;
-        }
+        .finish-action-btn { background-color: #28a745; }
+        .finish-action-btn:hover { background-color: #218838; }
 
-        .retry-action-btn {
-            background-color: #f0ad4e;
-        }
-        .retry-action-btn:hover {
-            background-color: #ec971f;
-        }
+        .retry-action-btn { background-color: #f0ad4e; }
+        .retry-action-btn:hover { background-color: #ec971f; }
 
         .error-msg { color: #d32f2f; margin-top: 15px; font-weight: bold; background-color: #ffebee; padding: 10px 15px; border-radius: 8px; font-size: 13px; width: 100%; max-width: 380px; }
 
@@ -219,8 +210,6 @@
             .form-container { height: 850px; }
             .quiz-option-group { flex-direction: column; }
             .user-text-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
-            
-            /* 手機螢幕較小時，改為上下堆疊以確保文字不擠壓 */
             .action-button-group { flex-direction: column; gap: 10px; }
         }
 
@@ -305,7 +294,7 @@
                 <!-- 透過 JS 載入 iframe -->
             </div>
 
-            <!-- 🌟 風格一致且並排的雙按鈕操作區 -->
+            <!-- 風格一致且並排的雙按鈕操作區 -->
             <div class="action-button-group">
                 <button onclick="finishAndLogout()" class="action-btn finish-action-btn">✅ 我已經完成交卷，並且分數達70分以上</button>
                 <button onclick="reloadExamForm()" class="action-btn retry-action-btn">🔄 未達70分不及格，我要重新測驗</button>
@@ -346,3 +335,235 @@
     let watchedSeconds = 0;
     let player;
     let checkInterval = null;
+    let isUnlocked = false;
+    let quizTriggered = false; 
+
+    let loggedInName = "";
+    let loggedInCode = "";
+
+    function formatTimeText(totalSeconds) {
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        let result = "";
+        if (hrs > 0) result += hrs + " 小時 ";
+        if (mins > 0 || hrs > 0) result += mins + " 分 ";
+        result += secs + " 秒";
+        return result;
+    }
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            videoId: 'pe8jBnIqoRI',
+            playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+            events: { 'onStateChange': onPlayerStateChange }
+        });
+    }
+
+    function onPlayerStateChange(event) {
+        if (isUnlocked) return;
+
+        if (event.data === YT.PlayerState.PLAYING) {
+            if (!checkInterval) {
+                checkInterval = setInterval(trackRealPlayTime, 1000);
+            }
+        } else {
+            if (checkInterval) {
+                clearInterval(checkInterval);
+                checkInterval = null;
+            }
+            if (event.data === YT.PlayerState.PAUSED && !quizTriggered) {
+                updateStatusText("⏸️ 影片已暫停，請繼續播放以繼續計時...");
+            }
+        }
+    }
+
+    function trackRealPlayTime() {
+        if (isUnlocked) return;
+
+        const currentTime = Math.floor(player.getCurrentTime());
+
+        watchedSeconds++;
+        const remaining = Math.max(0, targetWatchSeconds - watchedSeconds);
+        
+        const countdownEl = document.getElementById('countdown');
+        if (countdownEl) countdownEl.innerText = formatTimeText(remaining);
+
+        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${formatTimeText(remaining)}</span> 後自動解鎖測驗`);
+
+        if ((watchedSeconds >= quizTime || currentTime >= quizTime) && !quizTriggered) {
+            quizTriggered = true;
+            pauseForQuiz();
+            return;
+        }
+
+        if (watchedSeconds >= targetWatchSeconds) {
+            isUnlocked = true;
+            if (checkInterval) clearInterval(checkInterval);
+
+            const timerStatusEl = document.getElementById('timer-status');
+            timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。";
+            timerStatusEl.style.backgroundColor = "#e8f5e9";
+            timerStatusEl.style.color = "#2e7d32";
+            timerStatusEl.style.borderColor = "#c8e6c9";
+
+            document.getElementById('exam-section').classList.remove('hidden');
+            loadExamForm();
+        }
+    }
+
+    function loadExamForm() {
+        const container = document.getElementById('dynamic-form-container');
+        
+        const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfvAvntX-4OLxYCUsjnGDXVoXk1u1HhxOY2LwPTBBUZjPr8jQ/viewform?usp=pp_url";
+        const entryNameId = "entry.1105263814"; // 中文姓名 ID
+        const entryCodeId = "entry.13222723";   // 登入驗證碼 ID
+
+        const encodedName = encodeURIComponent(loggedInName);
+        const encodedCode = encodeURIComponent(loggedInCode);
+
+        const finalUrl = `${formBaseUrl}&${entryNameId}=${encodedName}&${entryCodeId}=${encodedCode}&embedded=true&ts=` + new Date().getTime();
+
+        container.innerHTML = `
+            <iframe src="${finalUrl}" frameborder="0" marginheight="0" marginwidth="0" style="border: none; width:100%; height:100%;" allowfullscreen>
+                載入中…
+            </iframe>
+        `;
+    }
+
+    function finishAndLogout() {
+        if (confirm("確認您已在上方表單點擊「提交」送出試卷，且成績達 70 分以上嗎？\n\n點擊確定將安全登出系統並返回首頁。")) {
+            alert("🎉 恭喜完成安全衛生教育訓練！系統已安全登出。");
+            location.reload(); 
+        }
+    }
+
+    function reloadExamForm() {
+        if (confirm("是否確認要重新載入測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
+            loadExamForm();
+            alert("表單已重新載入，您的身分已維持綁定，請重新作答！");
+        }
+    }
+
+    function pauseForQuiz() {
+        if (player && player.pauseVideo) {
+            player.pauseVideo(); 
+        }
+        if (checkInterval) {
+            clearInterval(checkInterval); 
+            checkInterval = null;
+        }
+        updateStatusText("🚨 已觸發專心度隨堂抽考，請答對彈窗問題以繼續播放...");
+        document.getElementById('quiz-modal').classList.remove('hidden');
+    }
+
+    function submitAnswer(isCorrect) {
+        const feedback = document.getElementById('quiz-feedback');
+        feedback.style.display = "block";
+
+        if (isCorrect) {
+            feedback.style.color = "#2e7d32";
+            feedback.innerText = "✅ 回答正確！影片將繼續播放...";
+            
+            setTimeout(() => {
+                document.getElementById('quiz-modal').classList.add('hidden');
+                feedback.style.display = "none";
+                
+                if (player && player.playVideo) {
+                    player.playVideo();
+                }
+            }, 1200);
+        } else {
+            feedback.style.color = "#d32f2f";
+            feedback.innerText = "❌ 答案不正確，請重新確認安全規範並重新選擇！";
+        }
+    }
+
+    function updateStatusText(htmlContent) {
+        const timerStatusEl = document.getElementById('timer-status');
+        if (timerStatusEl && !isUnlocked) {
+            timerStatusEl.innerHTML = htmlContent;
+        }
+    }
+
+    async function checkPassword() {
+        const inputName = document.getElementById('name-input').value.trim();
+        const inputCode = document.getElementById('password-input').value.trim().toUpperCase();
+        const errorMsg = document.getElementById('error-message');
+        const btn = document.getElementById('verify-btn');
+
+        if (!inputName || !inputCode) {
+            errorMsg.innerText = "請完整輸入中文姓名與授權驗證碼！";
+            errorMsg.classList.remove('hidden');
+            return;
+        }
+
+        btn.innerText = "驗證中...";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
+            
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+
+            let csvText = await response.text();
+            csvText = csvText.replace(/^\uFEFF/, '');
+
+            const rows = csvText.split(/\r?\n/);
+            let isValid = false;
+
+            for (let row of rows) {
+                if (!row.trim()) continue;
+
+                const cells = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => 
+                    cell.replace(/^["'\s\uFEFF]+|["'\s\uFEFF]+$/g, '').trim()
+                );
+
+                if (cells.length >= 2) {
+                    const nameCell = cells[0];
+                    const codeCell = cells[1].toUpperCase();
+
+                    if ((nameCell === inputName && codeCell === inputCode) ||
+                        (cells.some(c => c === inputName) && cells.some(c => c.toUpperCase() === inputCode))) {
+                        isValid = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isValid) {
+                loggedInName = inputName;
+                loggedInCode = inputCode;
+
+                document.getElementById('current-user-display').innerText = `${loggedInName} (驗證碼: ${loggedInCode})`;
+
+                document.getElementById('login-gate').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                window.scrollTo(0, 0);
+            } else {
+                errorMsg.innerText = "姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。";
+                errorMsg.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error("連線 Google 試算表失敗：", error);
+            errorMsg.innerText = "系統驗證連線失敗，請檢查網路連線或稍後再試。";
+            errorMsg.classList.remove('hidden');
+        } finally {
+            btn.innerText = "認證登入";
+            btn.disabled = false;
+        }
+    }
+
+    document.getElementById('password-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+    document.getElementById('name-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+</body>
+</html>
