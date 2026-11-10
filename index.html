@@ -93,8 +93,11 @@
         .login-btn { width: 100%; padding: 12px 24px; font-size: 16px; font-weight: 600; color: white; background: var(--inventec-red); border: none; border-radius: 8px; cursor: pointer; transition: var(--transition); white-space: nowrap; margin-top: 4px; }
         .login-btn:hover { background-color: #a61c22; }
 
-        .retry-action-btn { width: 100%; padding: 12px 24px; font-size: 16px; font-weight: 600; color: white; background: #f0ad4e; border: none; border-radius: 8px; cursor: pointer; transition: var(--transition); margin-top: 15px; }
+        .retry-action-btn { width: 100%; padding: 12px 24px; font-size: 15px; font-weight: 600; color: white; background: #f0ad4e; border: none; border-radius: 8px; cursor: pointer; transition: var(--transition); margin-top: 10px; }
         .retry-action-btn:hover { background-color: #ec971f; }
+
+        .finish-action-btn { width: 100%; padding: 14px 24px; font-size: 16px; font-weight: 600; color: white; background: #28a745; border: none; border-radius: 8px; cursor: pointer; transition: var(--transition); margin-top: 15px; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); }
+        .finish-action-btn:hover { background-color: #218838; }
 
         .error-msg { color: #d32f2f; margin-top: 15px; font-weight: bold; background-color: #ffebee; padding: 10px 15px; border-radius: 8px; font-size: 13px; width: 100%; max-width: 380px; }
 
@@ -198,7 +201,7 @@
                 <h2>環安衛數位教材觀看 (測試模式)</h2>
             </div>
             <p class="step-info">
-                請認真觀看下方安全衛生教材影片，測驗題目皆出自影片內容。<br>
+                請認真觀看下方安全衛生教材影片。<br>
                 目前為測試模式：<strong>10 秒後解鎖測驗</strong>，<strong>播放滿 5 秒將進行隨堂抽考</strong>。
             </p>
  
@@ -217,9 +220,11 @@
                 <h2>線上環安衛學科測驗</h2>
             </div>
             <p class="step-info">
-                已完成影片觀看，您的個人資料已自動帶入下方表單。<br>
-                及格分數為 <strong>70 分</strong>，若不及格將不予以發放施工許可證。<br>
-                <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 注意：若未達 70 分需重新測驗，請點擊下方「不及格重新測驗」按鈕。</span>
+                已完成影片觀看，您的個人驗證資料已自動帶入下方表單。<br>
+                及格分數為 <strong>70 分</strong>。<br>
+                <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成指引：</span><br>
+                • <strong>若您考獲 70 分以上（及格）</strong>：請點擊上方表單送出後，點擊下方「✅ 我已及格並完成交卷」按鈕安全登出。<br>
+                • <strong>若未達 70 分（不及格）</strong>：請點擊下方「🔄 不及格重新測驗」按鈕重新作答。
             </p>
  
             <!-- 動態載入帶有預填資料的 Google 表單容器 -->
@@ -227,8 +232,11 @@
                 <!-- 這裡會透過 JS 自動載入預填 iframe -->
             </div>
 
+            <!-- 及格完成交卷按鈕（自動強制登出） -->
+            <button onclick="finishAndLogout()" class="finish-action-btn">✅ 我已考試及格並完成交卷（結束並返回登入頁）</button>
+
             <!-- 不及格重考按鈕 -->
-            <button onclick="reloadExamForm()" class="retry-action-btn">🔄 若剛才測驗不及格，點此重新測驗（無需重新看影片）</button>
+            <button onclick="reloadExamForm()" class="retry-action-btn">🔄 若剛才測驗未達 70 分（不及格），點此重新測驗</button>
         </div>
     </div>
 
@@ -257,6 +265,7 @@
 <script>
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
     
+    // 🧪 【測試環境秒數設定】正式上線時請改回 targetWatchSeconds = 5180; quizTime = 3600;
     const targetWatchSeconds = 10;  
     const quizTime = 5;            
 
@@ -351,7 +360,7 @@
         const encodedName = encodeURIComponent(loggedInName);
         const encodedCode = encodeURIComponent(loggedInCode);
 
-        const finalUrl = `${formBaseUrl}&${entryNameId}=${encodedName}&${entryCodeId}=${encodedCode}&embedded=true`;
+        const finalUrl = `${formBaseUrl}&${entryNameId}=${encodedName}&${entryCodeId}=${encodedCode}&embedded=true&ts=` + new Date().getTime();
 
         container.innerHTML = `
             <iframe src="${finalUrl}" frameborder="0" marginheight="0" marginwidth="0" style="border: none; width:100%; height:100%;" allowfullscreen>
@@ -360,10 +369,19 @@
         `;
     }
 
+    // ✅ 及格完成交卷：彈出提示並自動強制歸零登出
+    function finishAndLogout() {
+        if (confirm("確認您已在上方表單點擊「提交」送出試卷，且成績達 70 分以上嗎？\n\n點擊確定將安全登出系統並返回首頁。")) {
+            alert("🎉 恭喜完成安全衛生教育訓練！系統已安全登出。");
+            location.reload(); // 強制重新整理回到登入大門
+        }
+    }
+
+    // 🔄 不及格重考：重新載入表單供補考（姓名與授權碼維持綁定原登入者）
     function reloadExamForm() {
-        if (confirm("是否確認要重新載入測驗表單？（若您剛才已交卷但未達 70 分，可點擊確定重新作答）")) {
+        if (confirm("是否確認要重新填寫測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
             loadExamForm();
-            alert("表單已重新載入，您的姓名與驗證碼已自動帶入！");
+            alert("表單已重新載入，您的姓名與驗證碼已保持帶入，請重新作答！");
         }
     }
 
