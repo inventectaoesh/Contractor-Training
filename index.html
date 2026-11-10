@@ -21,9 +21,9 @@
         body {
             font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
             background-color: var(--bg-base);
-            background-image: 
+            background-image:
                 linear-gradient(rgba(244, 234, 225, 0.85), rgba(244, 234, 225, 0.85)),
-                url('back.png'), url('back.jpg'), url('back.JPG'), url('BACK.JPG');
+                url('back.png'), url('back.jpg'), url('back.JPG'), url('BACK.JPG'), url('back.jpeg');
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
@@ -41,20 +41,32 @@
         }
 
         .inventec-logo {
-            max-width: 280px; width: 80%; height: auto; margin-bottom: 8px;
-            display: inline-block; mix-blend-mode: multiply;
+            max-width: 280px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 8px;
+            display: inline-block;
+            mix-blend-mode: multiply;
         }
 
         .platform-title {
-            text-align: center; font-size: 24px; letter-spacing: 0.5px;
-            margin-bottom: 4px; color: var(--inventec-red); font-weight: 800; line-height: 1.3;
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            color: var(--inventec-red);
+            font-weight: 800;
+            line-height: 1.3;
         }
 
         .title-br { display: none; }
 
         .platform-subtitle {
-            text-align: center; color: var(--text-light); font-size: 11px;
-            text-transform: uppercase; letter-spacing: 1px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .osh-card {
@@ -64,16 +76,22 @@
         }
 
         #login-gate { display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; }
-
+ 
         .login-top-half {
-            padding: 30px 20px 15px 20px; text-align: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px 20px 15px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .login-icon-box { position: relative; display: inline-block; margin-bottom: 12px; }
         .login-icon {
-            font-size: 68px; filter: drop-shadow(0 6px 12px rgba(200, 35, 43, 0.25));
-            animation: pulse-ehs 3s infinite ease-in-out; display: inline-block;
+            font-size: 68px;
+            filter: drop-shadow(0 6px 12px rgba(200, 35, 43, 0.25));
+            animation: pulse-ehs 3s infinite ease-in-out;
+            display: inline-block;
         }
         @keyframes pulse-ehs { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
@@ -82,8 +100,12 @@
         .divider-red-line { width: 100%; height: 3px; background-color: var(--inventec-red); }
 
         .login-bottom-half {
-            padding: 25px 20px 30px 20px; text-align: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 25px 20px 30px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .password-group { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 380px; margin: 20px auto 0 auto; gap: 12px; }
@@ -115,7 +137,8 @@
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex; justify-content: center; align-items: center;
             z-index: 9999; backdrop-filter: blur(6px);
         }
 
@@ -127,11 +150,12 @@
 
         .modal-card h3 { color: var(--inventec-red); margin-bottom: 12px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .modal-card p { font-size: 16px; margin-bottom: 22px; font-weight: 600; color: var(--text-dark); line-height: 1.5; text-align: left; }
-        
+ 
         .quiz-option-group { display: flex; gap: 15px; justify-content: center; }
 
         .quiz-option {
-            flex: 1; padding: 14px 20px; background: #f8f9fa; border: 2px solid #ddd; border-radius: 10px;
+            flex: 1; padding: 14px 20px;
+            background: #f8f9fa; border: 2px solid #ddd; border-radius: 10px;
             font-size: 16px; font-weight: bold; cursor: pointer; transition: var(--transition);
             color: var(--text-dark); display: flex; align-items: center; justify-content: center; gap: 8px;
         }
@@ -162,4 +186,181 @@
 
 <div class="osh-container">
     <div class="header-logo-area">
-        <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo"
+        <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo" class="inventec-logo">
+        <h1 class="platform-title">英業達桃科廠(TAO)<br class="title-br">承攬商安全衛生數位學習平台</h1>
+        <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
+    </div>
+
+    <div id="login-gate" class="osh-card">
+        <div class="login-top-half">
+            <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
+            <h2>承攬商人員登入</h2>
+        </div>
+
+        <div class="divider-red-line"></div>
+
+        <div class="login-bottom-half">
+            <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+                本平台僅開放供本公司審查合格之承攬商人員使用。<br>
+                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權碼</strong>。
+            </p>
+ 
+            <div class="password-group">
+                <input type="text" id="name-input" placeholder="請輸入中文姓名" autocomplete="off">
+                <input type="text" id="password-input" placeholder="請輸入授權驗證碼" autocomplete="off">
+                <button id="verify-btn" onclick="checkPassword()" class="login-btn">認證登入</button>
+            </div>
+
+            <div id="error-message" class="error-msg hidden">姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。</div>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <div class="osh-card osh-card-inner" style="padding: 25px;">
+            <div class="step-header">
+                <div class="step-number">01</div>
+                <h2>環安衛數位教材觀看 (測試模式)</h2>
+            </div>
+            <p class="step-info">
+                請認真觀看下方安全衛生教材影片，測驗題目皆出自影片內容。<br>
+                目前為測試模式：<strong>10 秒後解鎖測驗</strong>，<strong>播放滿 5 秒將進行隨堂抽考</strong>。
+            </p>
+ 
+            <div class="video-container">
+                <div id="player"></div>
+            </div>
+ 
+            <div id="timer-status" class="timer-box">
+                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">10 秒</span> 後將自動解鎖測驗卷...
+            </div>
+        </div>
+
+        <div id="exam-section" class="osh-card osh-card-inner hidden" style="padding: 25px;">
+            <div class="step-header">
+                <div class="step-number">02</div>
+                <h2>線上環安衛學科測驗</h2>
+            </div>
+            <p class="step-info">
+                已完成影片觀看，您的個人資料已自動帶入下方表單。<br>
+                及格分數為 <strong>70 分</strong>，若不及格將不予以發放施工許可證。<br>
+                <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 注意：若未達 70 分需重新測驗，請點擊下方「不及格重新測驗」按鈕。</span>
+            </p>
+ 
+            <!-- 動態載入帶有預填資料的 Google 表單容器 -->
+            <div id="dynamic-form-container" class="form-container">
+                <!-- 這裡會透過 JS 自動載入預填 iframe -->
+            </div>
+
+            <!-- 不及格重考按鈕 -->
+            <button onclick="reloadExamForm()" class="retry-action-btn">🔄 若剛才測驗不及格，點此重新測驗（無需重新看影片）</button>
+        </div>
+    </div>
+
+    <div class="osh-footer">
+        © Inventec Corporation, Environmental Health and Safety Department.<br>
+        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進場前教育訓練使用。
+    </div>
+</div>
+
+<div id="quiz-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+        <h3>🚨 專心度隨堂抽考</h3>
+        <p id="quiz-question"><strong>【是非題】</strong><br>安全帽配戴，須把頤帶(帽帶)扣在下巴處固定。</p>
+ 
+        <div class="quiz-option-group">
+            <button class="quiz-option" onclick="submitAnswer(true)">⭕ 圈 (正確)</button>
+            <button class="quiz-option" onclick="submitAnswer(false)">❌ 叉 (錯誤)</button>
+        </div>
+ 
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+    </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+    const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
+    
+    // 🧪 【測試環境秒數設定】正式上線時請改回 targetWatchSeconds = 5180; quizTime = 3600;
+    const targetWatchSeconds = 10;  
+    const quizTime = 5;            
+
+    let watchedSeconds = 0;
+    let player;
+    let checkInterval = null;
+    let isUnlocked = false;
+    let quizTriggered = false; 
+
+    // 儲存登入者資料供預填與重考使用
+    let loggedInName = "";
+    let loggedInCode = "";
+
+    // 秒數轉換為易讀格式函式
+    function formatTimeText(totalSeconds) {
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        let result = "";
+        if (hrs > 0) result += hrs + " 小時 ";
+        if (mins > 0 || hrs > 0) result += mins + " 分 ";
+        result += secs + " 秒";
+        return result;
+    }
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            videoId: 'pe8jBnIqoRI',
+            playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+            events: { 'onStateChange': onPlayerStateChange }
+        });
+    }
+
+    function onPlayerStateChange(event) {
+        if (isUnlocked) return;
+
+        if (event.data === YT.PlayerState.PLAYING) {
+            if (!checkInterval) {
+                checkInterval = setInterval(trackRealPlayTime, 1000);
+            }
+        } else {
+            if (checkInterval) {
+                clearInterval(checkInterval);
+                checkInterval = null;
+            }
+            if (event.data === YT.PlayerState.PAUSED && !quizTriggered) {
+                updateStatusText("⏸️ 影片已暫停，請繼續播放以繼續計時...");
+            }
+        }
+    }
+
+    function trackRealPlayTime() {
+        if (isUnlocked) return;
+
+        const currentTime = Math.floor(player.getCurrentTime());
+
+        watchedSeconds++;
+        const remaining = Math.max(0, targetWatchSeconds - watchedSeconds);
+        
+        const countdownEl = document.getElementById('countdown');
+        if (countdownEl) countdownEl.innerText = formatTimeText(remaining);
+
+        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${formatTimeText(remaining)}</span> 後自動解鎖測驗`);
+
+        if ((watchedSeconds >= quizTime || currentTime >= quizTime) && !quizTriggered) {
+            quizTriggered = true;
+            pauseForQuiz();
+            return;
+        }
+
+        if (watchedSeconds >= targetWatchSeconds) {
+            isUnlocked = true;
+            if (checkInterval) clearInterval(checkInterval);
+
+            const timerStatusEl = document.getElementById('timer-status');
+            timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。";
+            timerStatusEl.style.backgroundColor = "#e8f5e9";
+            timerStatusEl.style.color = "#2e7d32";
+            timerStatusEl.style.borderColor = "#c8e6c9";
+
+            document.getElementById('exam-section').classList.remove('hidden');
