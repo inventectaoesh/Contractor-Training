@@ -108,12 +108,34 @@
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: #000; }
         .video-container #player, .video-container iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: 0; }
 
-        .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        /* 表單外框與透明防護罩設計 */
+        .form-container { 
+            position: relative; 
+            width: 100%; 
+            height: 900px; 
+            overflow: hidden; 
+            border-radius: 8px; 
+            border: 1px solid #ecdcd0; 
+            background-color: #ffffff; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+        }
         .form-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* 🛡️ 透明防護罩：絕對定位覆蓋在上方，高度涵蓋前兩題（姓名與驗證碼大約在表單上方 220px 內），讓滑鼠點不到，但下方測驗題目正常可以作答 */
+        .form-shield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 220px; /* 覆蓋表單前兩題區域 */
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.01); /* 幾近全透明 */
+            cursor: not-allowed;
+        }
 
         .timer-box { margin-top: 15px; padding: 12px; background-color: var(--inventec-light-red); border: 1px solid #f5c6cb; border-radius: 8px; text-align: center; color: var(--inventec-red); font-weight: bold; font-size: 14px; }
 
-        .osh-footer { text-align: center; font-size: 11px; color: #7c6a62; margin-top: 30px; border-top: 1px solid #ecdcd0; padding-top: 15px; }
+        .osh-footer { text-align: center; font-size: 11px; color: var(--text-light); margin-top: 30px; border-top: 1px solid #ecdcd0; padding-top: 15px; }
         .hidden { display: none !important; }
 
         .modal-overlay {
@@ -155,6 +177,7 @@
             .login-bottom-half { padding: 20px 15px; }
             .osh-card { padding: 20px !important; }
             .form-container { height: 850px; }
+            .form-shield { height: 260px; } /* 手機版表單區塊較長，防護罩稍微加高 */
             .quiz-option-group { flex-direction: column; }
         }
 
@@ -220,16 +243,16 @@
                 <h2>線上環安衛學科測驗</h2>
             </div>
             <p class="step-info">
-                已完成影片觀看，您的個人驗證資料已自動帶入下方表單。<br>
+                已完成影片觀看，您的個人身分已自動帶入並<strong>受安全防護罩保護（無法修改）</strong>。<br>
                 及格分數為 <strong>70 分</strong>。<br>
                 <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成指引：</span><br>
                 • <strong>若您考獲 70 分以上（及格）</strong>：請點擊上方表單送出後，點擊下方「✅ 我已及格並完成交卷」按鈕安全登出。<br>
                 • <strong>若未達 70 分（不及格）</strong>：請點擊下方「🔄 不及格重新測驗」按鈕重新作答。
             </p>
  
-            <!-- 動態載入帶有預填資料的 Google 表單容器 -->
+            <!-- 動態載入帶有預填資料與透明防護罩的 Google 表單容器 -->
             <div id="dynamic-form-container" class="form-container">
-                <!-- 這裡會透過 JS 自動載入預填 iframe -->
+                <!-- 透明防護罩會由 JS 動態生成，阻絕滑鼠點擊前兩題欄位 -->
             </div>
 
             <!-- 及格完成交卷按鈕（自動強制登出） -->
@@ -362,7 +385,9 @@
 
         const finalUrl = `${formBaseUrl}&${entryNameId}=${encodedName}&${entryCodeId}=${encodedCode}&embedded=true&ts=` + new Date().getTime();
 
+        // 🛡️ 在表單 iframe 上方疊加一層 .form-shield 透明防護罩，滑鼠完全點不到上方欄位
         container.innerHTML = `
+            <div class="form-shield" title="此欄位已由系統安全鎖定，無法修改"></div>
             <iframe src="${finalUrl}" frameborder="0" marginheight="0" marginwidth="0" style="border: none; width:100%; height:100%;" allowfullscreen>
                 載入中…
             </iframe>
@@ -377,7 +402,7 @@
         }
     }
 
-    // 🔄 不及格重考：重新載入表單供補考（姓名與授權碼維持綁定原登入者）
+    // 🔄 不及格重考：重新載入表單供補考
     function reloadExamForm() {
         if (confirm("是否確認要重新填寫測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
             loadExamForm();
