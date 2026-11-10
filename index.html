@@ -23,7 +23,7 @@
             background-color: var(--bg-base);
             background-image:
                 linear-gradient(rgba(244, 234, 225, 0.85), rgba(244, 234, 225, 0.85)),
-                url('back.png'), url('back.jpg'), url('back.JPG'), url('BACK.JPG'), url('back.jpeg');
+                url('back.png');
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
@@ -345,22 +345,7 @@
         const countdownEl = document.getElementById('countdown');
         if (countdownEl) countdownEl.innerText = formatTimeText(remaining);
 
-        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${formatTimeText(remaining)}</span> 後自動解鎖測驗`);
+        updateStatusText(`▶️ 影片播放中... 尚需觀看 <span id="countdown">${formatTimeText(remaining)}</span> 後自動解鎖測驗`);  if ((watchedSeconds >= quizTime \vert{}\vert{} currentTime >= quizTime) && !quizTriggered) { quizTriggered = true; pauseForQuiz(); return; }  if (watchedSeconds >= targetWatchSeconds) { isUnlocked = true; if (checkInterval) clearInterval(checkInterval);  const timerStatusEl = document.getElementById('timer-status'); timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。"; timerStatusEl.style.backgroundColor = "#e8f5e9"; timerStatusEl.style.color = "#2e7d32"; timerStatusEl.style.borderColor = "#c8e6c9";  document.getElementById('exam-section').classList.remove('hidden'); loadExamForm(); } }  // 🔗 動態載入帶有預填資料的 Google 表單 (防止代填漏洞) function loadExamForm() { const container = document.getElementById('dynamic-form-container');  const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfvAvntX-4OLxYCUsjnGDXVoXk1u1HhxOY2LwPTBBUZjPr8jQ/viewform?usp=pp_url"; const entryNameId = "entry.1105263814"; // 中文姓名 ID const entryCodeId = "entry.13222723";   // 登入驗證碼 ID  const encodedName = encodeURIComponent(loggedInName); const encodedCode = encodeURIComponent(loggedInCode);  const finalUrl = `${formBaseUrl}&${entryNameId}=${encodedName}&${entryCodeId}=${encodedCode}&embedded=true`;
 
-        if ((watchedSeconds >= quizTime || currentTime >= quizTime) && !quizTriggered) {
-            quizTriggered = true;
-            pauseForQuiz();
-            return;
-        }
-
-        if (watchedSeconds >= targetWatchSeconds) {
-            isUnlocked = true;
-            if (checkInterval) clearInterval(checkInterval);
-
-            const timerStatusEl = document.getElementById('timer-status');
-            timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。";
-            timerStatusEl.style.backgroundColor = "#e8f5e9";
-            timerStatusEl.style.color = "#2e7d32";
-            timerStatusEl.style.borderColor = "#c8e6c9";
-
-            document.getElementById('exam-section').classList.remove('hidden');
+        container.innerHTML = `
+            <iframe src="${finalUrl}" frameborder="0" marginheight="0" marginwidth="0" style="
