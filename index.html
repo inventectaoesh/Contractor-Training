@@ -282,18 +282,19 @@
                 <h2>線上環安衛學科測驗</h2>
             </div>
             <p class="step-info">
-                已完成影片觀看，您的個人身分（姓名與驗證碼）已由系統<strong>安全鎖定帶入</strong>。<br>
+                已完成影片觀看，您的個人身分（姓名與驗證碼）已由系統<strong>鎖定帶入</strong>。<br>
                 及格分數為 <strong>70 分</strong>。<br>
-                <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成與補考指引：</span><br>
-                • <strong>若您考獲 70 分以上（及格）</strong>：請交卷後點擊下方左側按鈕安全登出。<br>
-                • <strong>若未達 70 分（不及格）</strong>：可直接檢視分數，並點擊下方右側按鈕在原地重新補考（無需重新看影片）。
-            </p>
  
             <!-- 動態載入帶有嚴格綁定身分的 Google 表單容器 -->
             <div id="dynamic-form-container" class="form-container">
                 <!-- 透過 JS 載入 iframe -->
             </div>
 
+                <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成與補考指引：</span><br>
+                • <strong>若考獲 70 分以上（及格）</strong>：請交卷後點擊下方左側按鈕再次確認。<br>
+                • <strong>若未達 70 分（不及格）</strong>：檢視分數後，點擊下方右側按鈕重新補考。
+            </p>
+            
             <!-- 風格一致且並排的雙按鈕操作區 -->
             <div class="action-button-group">
                 <button onclick="finishAndLogout()" class="action-btn finish-action-btn">✅ 我已經完成交卷，並且分數達70分以上</button>
@@ -304,7 +305,7 @@
 
     <div class="osh-footer">
         © Inventec Corporation, Environmental Health and Safety Department.<br>
-        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進場前教育訓練使用。
+        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進廠前教育訓練使用。
     </div>
 </div>
 
@@ -433,8 +434,8 @@
     }
 
     function finishAndLogout() {
-        if (confirm("確認您已在上方表單點擊「提交」送出試卷，且成績達 70 分以上嗎？\n\n點擊確定將安全登出系統並返回首頁。")) {
-            alert("🎉 恭喜完成安全衛生教育訓練！系統已安全登出。");
+        if (confirm("確認您已在上方表單點擊「提交」送出試卷，且成績達 70 分以上嗎？")) {
+            alert("🎉 恭喜完成安全衛生教育訓練！");
             location.reload(); 
         }
     }
@@ -442,7 +443,7 @@
     function reloadExamForm() {
         if (confirm("是否確認要重新載入測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
             loadExamForm();
-            alert("表單已重新載入，您的身分已維持綁定，請重新作答！");
+            alert("表單已重新載入，您的身分已綁定登入資訊，請重新作答！");
         }
     }
 
