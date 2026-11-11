@@ -243,7 +243,7 @@
             <div class="password-group">
                 <input type="text" id="name-input" placeholder="請輸入中文姓名" autocomplete="off">
                 <input type="text" id="password-input" placeholder="請輸入授權驗證碼" autocomplete="off">
-                <button id="verify-btn" onclick="checkPassword()" class="login-btn">認證登入</button>
+                <button id="verify-btn" type="button" onclick="checkPassword()" class="login-btn">認證登入</button>
             </div>
 
             <div id="error-message" class="error-msg hidden">姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。</div>
@@ -306,27 +306,3 @@
     </div>
 
     <div class="osh-footer">
-        © Inventec Corporation, Environmental Health and Safety Department.<br>
-        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進廠前教育訓練使用。
-    </div>
-</div>
-
-<!-- 隨堂抽考彈窗 -->
-<div id="quiz-modal" class="modal-overlay hidden">
-    <div class="modal-card">
-        <h3>🚨 專心度隨堂抽考</h3>
-        <p id="quiz-question"><strong>【是非題】</strong><br>進入廠區作業，安全帽須確實配戴並將頤帶(帽帶)扣緊固定。</p>
- 
-        <div class="quiz-option-group">
-            <button class="quiz-option" onclick="submitAnswer(true)">⭕ 圈 (正確)</button>
-            <button class="quiz-option" onclick="submitAnswer(false)">❌ 叉 (錯誤)</button>
-        </div>
- 
-        <div id="quiz-feedback" class="quiz-feedback"></div>
-    </div>
-</div>
-
-<!-- 自訂精美確認對話框 -->
-<div id="custom-confirm-modal" class="modal-overlay hidden">
-    <div class="modal-card">
-        <h3 id="custom-confirm-title" style="color: var(--inventec-red); margin-bottom: 12px; font-size:
