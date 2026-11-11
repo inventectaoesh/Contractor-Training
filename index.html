@@ -182,7 +182,7 @@
         }
 
         .modal-card h3 { color: var(--inventec-red); margin-bottom: 12px; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .modal-card p { font-size: 16px; margin-bottom: 22px; font-weight: 600; color: var(--text-dark); line-height: 1.5; text-align: left; }
+        .modal-card p { font-size: 16px; margin-bottom: 22px; font-weight: 600; color: var(--text-dark); line-height: 1.5; text-align: center; }
  
         .quiz-option-group { display: flex; gap: 15px; justify-content: center; }
 
@@ -237,7 +237,7 @@
         <div class="login-bottom-half">
             <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
                 本平台僅開放供本公司審查合格之承攬商人員使用。<br>
-                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權碼</strong>。
+                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權驗證碼</strong>。
             </p>
  
             <div class="password-group">
@@ -263,9 +263,8 @@
                 <h2>環安衛數位教材觀看</h2>
             </div>
             <p class="step-info">
-                請認真觀看下方安全衛生教材影片，測驗題目皆出自影片內容。<br>
-                請勿快轉，確保了解英業達股份有限公司桃科廠(TAO)廠區作業規範及緊急通報流程。<br>
-                目前為測試模式：<strong>10 秒後解鎖測驗</strong>，<strong>播放滿 5 秒將進行隨堂抽考</strong>。
+                請完整觀看下方安全衛生教育訓練影片，測驗考題皆出自影片內容。<br>
+                為確保工安法規認知，影片觀看期間請勿快轉，確實掌握桃科廠(TAO)廠區作業安全規定與緊急應變程序。
             </p>
  
             <div class="video-container">
@@ -273,7 +272,7 @@
             </div>
  
             <div id="timer-status" class="timer-box">
-                ▶️ 請點擊上方影片播放鍵，累計播放滿 <span id="countdown">10 秒</span> 後將自動解鎖測驗卷...
+                ▶️ 請點擊上方影片播放鍵，完整觀看影片滿 <span id="countdown">10 秒</span> 後將自動解鎖下方測驗卷...
             </div>
         </div>
 
@@ -283,8 +282,8 @@
                 <h2>線上環安衛學科測驗</h2>
             </div>
             <p class="step-info">
-                已完成影片觀看，您的個人身分（姓名與驗證碼）已由系統<strong>鎖定帶入，請勿任意編輯</strong>。<br>
-                及格分數為 <strong>70 分</strong>。
+                已完成影片觀看認證，您的個人身分（姓名與驗證碼）已由系統<strong>安全鎖定帶入</strong>。<br>
+                本測驗及格標準為 <strong>70 分</strong>。
             </p>
 
             <!-- 動態載入帶有嚴格綁定身分的 Google 表單容器 -->
@@ -294,8 +293,8 @@
 
             <p class="step-info" style="margin-bottom: 10px;">
                 <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成與補考指引：</span><br>
-                • <strong>若考獲 70 分以上（及格）</strong>：請交卷後點擊下方左側按鈕確認。<br>
-                • <strong>若未達 70 分（不及格）</strong>：可直接檢視分數，並點擊下方右側按鈕重新補考。
+                • <strong>若成績達 70 分以上（及格）</strong>：請於上方表單提交後，點擊下方左側按鈕完成訓練並安全登出。<br>
+                • <strong>若未達 70 分（不及格）</strong>：可直接檢視失分題型，並點擊下方右側按鈕在原地重新測驗。
             </p>
 
             <!-- 風格一致且並排的雙按鈕操作區 -->
@@ -316,7 +315,7 @@
 <div id="quiz-modal" class="modal-overlay hidden">
     <div class="modal-card">
         <h3>🚨 專心度隨堂抽考</h3>
-        <p id="quiz-question"><strong>【是非題】</strong><br>安全帽配戴，須把頤帶(帽帶)扣在下巴處固定。</p>
+        <p id="quiz-question"><strong>【是非題】</strong><br>進入廠區作業，安全帽須確實配戴並將頤帶(帽帶)扣緊固定。</p>
  
         <div class="quiz-option-group">
             <button class="quiz-option" onclick="submitAnswer(true)">⭕ 圈 (正確)</button>
@@ -327,12 +326,24 @@
     </div>
 </div>
 
+<!-- 自訂精美確認對話框 -->
+<div id="custom-confirm-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+        <h3 id="custom-confirm-title" style="color: var(--inventec-red); margin-bottom: 12px; font-size: 20px; font-weight: bold;">提示</h3>
+        <p id="custom-confirm-text" style="font-size: 16px; margin-bottom: 22px; font-weight: 600; color: var(--text-dark); line-height: 1.5; text-align: center;">請確認您的操作內容</p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button id="custom-confirm-cancel" style="flex: 1; padding: 12px 20px; background: #e0e0e0; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; color: #333;">取消</button>
+            <button id="custom-confirm-ok" style="flex: 1; padding: 12px 20px; background: var(--inventec-red); border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; color: white;">確定</button>
+        </div>
+    </div>
+</div>
+
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
     const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMLAjZyCMZ_JLZZNe5U2iBmuwNNSdL1B4dUNNY17q7g5MkuKmnaEu9YLzKd2rPfKPcD23wgA5k0lCG/pub?gid=192837879&single=true&output=csv";
     
-    // 🧪 【測試環境秒數設定】正式上線時請改回 targetWatchSeconds = 5180; quizTime = 3600;
+    // ⚙️ 【正式上線秒數設定】目前維持測試秒數（10秒教材解鎖、5秒抽考）；正式啟用時請將其改回實際影片長度（例如 5180 秒）
     const targetWatchSeconds = 10;  
     const quizTime = 5;            
 
@@ -344,6 +355,30 @@
 
     let loggedInName = "";
     let loggedInCode = "";
+
+    function showCustomConfirm(title, message, onOk) {
+        document.getElementById('custom-confirm-title').innerText = title;
+        document.getElementById('custom-confirm-text').innerText = message;
+        const modal = document.getElementById('custom-confirm-modal');
+        modal.classList.remove('hidden');
+
+        const okBtn = document.getElementById('custom-confirm-ok');
+        const cancelBtn = document.getElementById('custom-confirm-cancel');
+
+        const newOkBtn = okBtn.cloneNode(true);
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+        newOkBtn.onclick = function() {
+            modal.classList.add('hidden');
+            if (onOk) onOk();
+        };
+
+        newCancelBtn.onclick = function() {
+            modal.classList.add('hidden');
+        };
+    }
 
     function formatTimeText(totalSeconds) {
         const hrs = Math.floor(totalSeconds / 3600);
@@ -378,7 +413,7 @@
                 checkInterval = null;
             }
             if (event.data === YT.PlayerState.PAUSED && !quizTriggered) {
-                updateStatusText("⏸️ 影片已暫停，請繼續播放以繼續計時...");
+                updateStatusText("⏸️ 影片已暫停，請點擊播放繼續觀看...");
             }
         }
     }
@@ -407,7 +442,7 @@
             if (checkInterval) clearInterval(checkInterval);
 
             const timerStatusEl = document.getElementById('timer-status');
-            timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行測驗。";
+            timerStatusEl.innerHTML = "✅ 影片觀看認證完成！請向下拉動頁面進行線上學科測驗。";
             timerStatusEl.style.backgroundColor = "#e8f5e9";
             timerStatusEl.style.color = "#2e7d32";
             timerStatusEl.style.borderColor = "#c8e6c9";
@@ -437,17 +472,23 @@
     }
 
     function finishAndLogout() {
-        if (confirm("確認您已完成測驗，且成績達 70 分以上嗎？")) {
-            alert("🎉 恭喜完成安全衛生教育訓練！");
-            location.reload(); 
-        }
+        showCustomConfirm(
+            "🎉 確認完成交卷",
+            "確認您已在上方表單送出試卷，且成績達 70 分以上嗎？\n點擊確定將結束本次訓練並安全登出。",
+            () => {
+                location.reload();
+            }
+        );
     }
 
     function reloadExamForm() {
-        if (confirm("是否確認要重新載入測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
-            loadExamForm();
-            alert("表單已重新載入，您的身分已綁定登入資訊，請重新作答！");
-        }
+        showCustomConfirm(
+            "🔄 重新測驗確認",
+            "是否確認要重新載入測驗表單？\n（若剛才測驗未達 70 分，可點擊確定重新作答）",
+            () => {
+                loadExamForm();
+            }
+        );
     }
 
     function pauseForQuiz() {
@@ -458,7 +499,7 @@
             clearInterval(checkInterval); 
             checkInterval = null;
         }
-        updateStatusText("🚨 已觸發專心度隨堂抽考，請答對彈窗問題以繼續播放...");
+        updateStatusText("🚨 已觸發專心度隨堂抽考，請正確回答彈窗問題以繼續播放...");
         document.getElementById('quiz-modal').classList.remove('hidden');
     }
 
@@ -480,7 +521,7 @@
             }, 1200);
         } else {
             feedback.style.color = "#d32f2f";
-            feedback.innerText = "❌ 答案不正確，請重新確認安全規範並重新選擇！";
+            feedback.innerText = "❌ 答案不正確，請重新確認廠區安全規定並重新選擇！";
         }
     }
 
@@ -548,7 +589,7 @@
                 document.getElementById('main-content').classList.remove('hidden');
                 window.scrollTo(0, 0);
             } else {
-                errorMsg.innerText = "姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。";
+                errorMsg.innerText = "姓名或授權驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。";
                 errorMsg.classList.remove('hidden');
             }
         } catch (error) {
