@@ -189,4 +189,110 @@
         .quiz-option {
             flex: 1; padding: 14px 20px; background: #f8f9fa; border: 2px solid #ddd; border-radius: 10px;
             font-size: 16px; font-weight: bold; cursor: pointer; transition: var(--transition);
-            color:
+            color: var(--text-dark); display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .quiz-option:hover { background: var(--inventec-light-red); border-color: var(--inventec-red); color: var(--inventec-red); }
+
+        .quiz-feedback { margin-top: 15px; font-weight: bold; font-size: 14px; text-align: center; display: none; }
+
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .header-logo-area { padding: 15px 10px; }
+            .inventec-logo { max-width: 200px; }
+            .platform-title { font-size: 18px; line-height: 1.4; }
+            .title-br { display: inline; }
+            .platform-subtitle { font-size: 10px; letter-spacing: 0.5px; }
+            .login-top-half { padding: 20px 15px 15px 15px; }
+            .login-top-half h2 { font-size: 18px; }
+            .login-icon { font-size: 54px; }
+            .login-bottom-half { padding: 20px 15px; }
+            .osh-card { padding: 20px !important; }
+            .form-container { height: 850px; }
+            .quiz-option-group { flex-direction: column; }
+            .user-text-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
+            .action-button-group { flex-direction: column; gap: 10px; }
+        }
+
+        @media (min-width: 601px) { .osh-card-inner { padding: 35px; } }
+    </style>
+</head>
+<body>
+
+<div class="osh-container">
+    <div class="header-logo-area">
+        <img src="LOGO.png" onerror="this.src='LOGO.PNG'; this.onerror=null;" alt="英業達集團 Inventec Logo" class="inventec-logo">
+        <h1 class="platform-title">英業達桃科廠(TAO)<br class="title-br">承攬商安全衛生數位學習平台</h1>
+        <p class="platform-subtitle">Inventec TAO Contractor EHS Digital Training Platform</p>
+    </div>
+
+    <!-- 登入大門 -->
+    <div id="login-gate" class="osh-card">
+        <div class="login-top-half">
+            <div class="login-icon-box"><div class="login-icon">⛑️</div></div>
+            <h2>承攬商人員登入</h2>
+        </div>
+
+        <div class="divider-red-line"></div>
+
+        <div class="login-bottom-half">
+            <p style="color: var(--text-light); font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+                本平台僅開放供本公司審查合格之承攬商人員使用。<br>
+                請輸入您的<strong>中文姓名</strong>與由<strong>英業達(TAO)安全衛生部發放之授權驗證碼</strong>。
+            </p>
+ 
+            <div class="password-group">
+                <input type="text" id="name-input" placeholder="請輸入中文姓名" autocomplete="off">
+                <input type="text" id="password-input" placeholder="請輸入授權驗證碼" autocomplete="off">
+                <button id="verify-btn" onclick="checkPassword()" class="login-btn">認證登入</button>
+            </div>
+
+            <div id="error-message" class="error-msg hidden">姓名或驗證碼不正確，請重新輸入或洽詢廠區安全衛生部。</div>
+        </div>
+    </div>
+
+    <!-- 主學習與測驗畫面 -->
+    <div id="main-content" class="hidden">
+        <div class="user-text-bar">
+            <div>👤 目前登入身分：<span id="current-user-display" style="color: var(--inventec-red); font-weight: bold;"></span></div>
+            <button onclick="location.reload()">切換帳號</button>
+        </div>
+
+        <div class="osh-card osh-card-inner" style="padding: 25px;">
+            <div class="step-header">
+                <div class="step-number">01</div>
+                <h2>環安衛數位教材觀看</h2>
+            </div>
+            <p class="step-info">
+                請完整觀看下方安全衛生教育訓練影片，測驗考題皆出自影片內容。<br>
+                影片觀看期間請勿快轉，確保了解英業達股份有限公司桃科廠(TAO)廠區作業規範及緊急通報流程。
+            </p>
+ 
+            <div class="video-container">
+                <div id="player"></div>
+            </div>
+ 
+            <div id="timer-status" class="timer-box">
+                ▶️ 請點擊上方影片播放鍵，完整觀看影片滿 <span id="countdown">10 秒</span> 後將自動解鎖下方測驗卷...
+            </div>
+        </div>
+
+        <div id="exam-section" class="osh-card osh-card-inner hidden" style="padding: 25px;">
+            <div class="step-header">
+                <div class="step-number">02</div>
+                <h2>線上環安衛學科測驗</h2>
+            </div>
+            <p class="step-info">
+                已完成影片觀看認證，您的個人身分（姓名與驗證碼）已由系統<strong>安全鎖定帶入</strong>。<br>
+                本測驗及格標準為 <strong>70 分</strong>。
+            </p>
+
+            <!-- 動態載入帶有嚴格綁定身分的 Google 表單容器 -->
+            <div id="dynamic-form-container" class="form-container">
+                <!-- 透過 JS 載入 iframe -->
+            </div>
+
+            <p class="step-info" style="margin-bottom: 10px;">
+                <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成與補考指引：</span><br>
+                • <strong>若成績達 70 分以上（及格）</strong>：確認已通過測驗，點擊下方左側按鈕完成訓練。<br>
+                • <strong>若未達 70 分（不及格）</strong>：需重新測驗，點擊下方右側按鈕再次測驗。
+            </p>
