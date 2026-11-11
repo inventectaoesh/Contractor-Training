@@ -296,3 +296,37 @@
                 • <strong>若成績達 70 分以上（及格）</strong>：確認已通過測驗，點擊下方左側按鈕完成訓練。<br>
                 • <strong>若未達 70 分（不及格）</strong>：需重新測驗，點擊下方右側按鈕再次測驗。
             </p>
+
+            <!-- 風格一致且並排的雙按鈕操作區 -->
+            <div class="action-button-group">
+                <button onclick="finishAndLogout()" class="action-btn finish-action-btn">✅ 我已經完成交卷，並且分數達70分以上</button>
+                <button onclick="reloadExamForm()" class="action-btn retry-action-btn">🔄 未達70分不及格，我要重新測驗</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="osh-footer">
+        © Inventec Corporation, Environmental Health and Safety Department.<br>
+        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進廠前教育訓練使用。
+    </div>
+</div>
+
+<!-- 隨堂抽考彈窗 -->
+<div id="quiz-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+        <h3>🚨 專心度隨堂抽考</h3>
+        <p id="quiz-question"><strong>【是非題】</strong><br>進入廠區作業，安全帽須確實配戴並將頤帶(帽帶)扣緊固定。</p>
+ 
+        <div class="quiz-option-group">
+            <button class="quiz-option" onclick="submitAnswer(true)">⭕ 圈 (正確)</button>
+            <button class="quiz-option" onclick="submitAnswer(false)">❌ 叉 (錯誤)</button>
+        </div>
+ 
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+    </div>
+</div>
+
+<!-- 自訂精美確認對話框 -->
+<div id="custom-confirm-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+        <h3 id="custom-confirm-title" style="color: var(--inventec-red); margin-bottom: 12px; font-size:
