@@ -133,7 +133,7 @@
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: #000; }
         .video-container #player, .video-container iframe { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: 0; }
 
-        .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .form-container { position: relative; width: 100%; height: 900px; overflow: hidden; border-radius: 8px; border: 1px solid #ecdcd0; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 15px; }
         .form-container iframe { width: 100%; height: 100%; border: none; }
 
         .timer-box { margin-top: 15px; padding: 12px; background-color: var(--inventec-light-red); border: 1px solid #f5c6cb; border-radius: 8px; text-align: center; color: var(--inventec-red); font-weight: bold; font-size: 14px; }
@@ -260,10 +260,11 @@
         <div class="osh-card osh-card-inner" style="padding: 25px;">
             <div class="step-header">
                 <div class="step-number">01</div>
-                <h2>環安衛數位教材觀看 (測試模式)</h2>
+                <h2>環安衛數位教材觀看</h2>
             </div>
             <p class="step-info">
-                請認真觀看下方安全衛生教材影片。<br>
+                請認真觀看下方安全衛生教材影片，測驗題目皆出自影片內容。<br>
+                請勿快轉，確保了解英業達股份有限公司桃科廠(TAO)廠區作業規範及緊急通報流程。<br>
                 目前為測試模式：<strong>10 秒後解鎖測驗</strong>，<strong>播放滿 5 秒將進行隨堂抽考</strong>。
             </p>
  
@@ -282,19 +283,21 @@
                 <h2>線上環安衛學科測驗</h2>
             </div>
             <p class="step-info">
-                已完成影片觀看，您的個人身分（姓名與驗證碼）已由系統<strong>鎖定帶入</strong>。<br>
-                及格分數為 <strong>70 分</strong>。<br>
- 
+                已完成影片觀看，您的個人身分（姓名與驗證碼）已由系統<strong>鎖定帶入，請勿任意編輯</strong>。<br>
+                及格分數為 <strong>70 分</strong>。
+            </p>
+
             <!-- 動態載入帶有嚴格綁定身分的 Google 表單容器 -->
             <div id="dynamic-form-container" class="form-container">
                 <!-- 透過 JS 載入 iframe -->
             </div>
- </div>
+
+            <p class="step-info" style="margin-bottom: 10px;">
                 <span style="color: var(--inventec-red); font-weight: bold;">⚠️ 測驗完成與補考指引：</span><br>
-                • <strong>若考獲 70 分以上（及格）</strong>：請交卷後點擊下方左側按鈕再次確認。<br>
-                • <strong>若未達 70 分（不及格）</strong>：檢視分數後，點擊下方右側按鈕重新補考。
+                • <strong>若考獲 70 分以上（及格）</strong>：請交卷後點擊下方左側按鈕確認。<br>
+                • <strong>若未達 70 分（不及格）</strong>：可直接檢視分數，並點擊下方右側按鈕重新補考。
             </p>
-            
+
             <!-- 風格一致且並排的雙按鈕操作區 -->
             <div class="action-button-group">
                 <button onclick="finishAndLogout()" class="action-btn finish-action-btn">✅ 我已經完成交卷，並且分數達70分以上</button>
@@ -305,7 +308,7 @@
 
     <div class="osh-footer">
         © Inventec Corporation, Environmental Health and Safety Department.<br>
-        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進廠前教育訓練使用。
+        本系統僅供英業達股份有限公司桃科廠(TAO)承攬商進場前教育訓練使用。
     </div>
 </div>
 
@@ -434,15 +437,14 @@
     }
 
     function finishAndLogout() {
-        if (confirm("確認已完成測驗，且成績達 70 分以上嗎？")) {
+        if (confirm("確認您已完成測驗，且成績達 70 分以上嗎？")) {
             alert("🎉 恭喜完成安全衛生教育訓練！");
             location.reload(); 
         }
     }
 
     function reloadExamForm() {
-        if (confirm("是否確認要重新載入測驗表單？
-                    （若您剛才未達 70 分，可點擊確定重新作答）")) {
+        if (confirm("是否確認要重新載入測驗表單？（若您剛才未達 70 分，可點擊確定重新作答）")) {
             loadExamForm();
             alert("表單已重新載入，您的身分已綁定登入資訊，請重新作答！");
         }
